@@ -438,7 +438,7 @@ export const WebhookSettings = ({ step, onOptionsChange }: Props) => {
               />
             </AccordionPanel>
           </AccordionItem>
-          {(step.options?.method === 'POST' || step.options?.method === 'PUT' || step.options?.method === 'PATCH') && (
+          {['POST', 'PUT', 'PATCH'].includes(step.options?.method) && (
             <AccordionItem>
               <AccordionButton justifyContent="space-between">
                 Body
