@@ -11,7 +11,6 @@ import {
   useOutsideClick,
   Flex,
   InputProps,
-  Stack,
 } from '@chakra-ui/react'
 import { useTypebot } from 'contexts/TypebotContext'
 import cuid from 'cuid'
@@ -27,14 +26,11 @@ import {
   FormFieldCol,
   FormFieldRowMin,
   LabelField,
-  OrText,
-  CreateButton,
 } from './VariableSearchInput.style'
 import OctaButton from 'components/octaComponents/OctaButton/OctaButton'
 import OctaInput from 'components/octaComponents/OctaInput/OctaInput'
 import { CustomFieldTitle } from 'enums/customFieldsTitlesEnum'
 import { StepNodeContext } from '../Graph/Nodes/StepNode/StepNode/StepNode'
-import { useWorkspace } from 'contexts/WorkspaceContext'
 
 type Props = {
   initialVariableId?: string
@@ -45,6 +41,7 @@ type Props = {
   labelDefault?: string
   isSaveContext?: boolean
   isApi?: boolean
+  variablesSelectorIsOpen?: boolean | undefined
   handleOutsideClick?: () => void
   onSelectVariable: (
     variable: Pick<
@@ -73,9 +70,11 @@ export const VariableSearchInput = ({
   labelDefault = '',
   isSaveContext = true,
   isApi = false,
+  variablesSelectorIsOpen = false,
   ...inputProps
 }: Props) => {
   const { onOpen, onClose } = useDisclosure()
+
   const { typebot, createVariable } = useTypebot()
 
   const variables = typebot?.variables ?? []
@@ -280,8 +279,8 @@ export const VariableSearchInput = ({
           {labelDefault || 'Selecione uma variável para salvar a resposta:'}
           <div onWheelCapture={handleContentWheel}>
             <Select
+              menuIsOpen={variablesSelectorIsOpen ? true : undefined}
               value={myVariable}
-              //isClearable={true}
               noOptionsMessage={() => 'Variável não encontrada'}
               onChange={onInputChange}
               minMenuHeight={50}
