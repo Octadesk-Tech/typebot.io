@@ -42,11 +42,19 @@ type Props = {
 
 export const WebhookSettings = ({ step, onOptionsChange }: Props) => {
   const { typebot } = useTypebot()
+
   const [isTestResponseLoading, setIsTestResponseLoading] = useState(false)
+
   const [testResponse, setTestResponse] = useState<string>()
+
   const [responseKeys, setResponseKeys] = useState<string[]>([])
+
   const [successTest, setSuccessTest] = useState<string>()
+
   const [responseData, setResponseData] = useState({ status: '' })
+
+  const [prevSelectedVariablesForTest, setPrevSelectedVariablesForTest] =
+    useState<any>(undefined)
 
   const errorToast = useToast({
     position: 'top-right',
@@ -94,12 +102,15 @@ export const WebhookSettings = ({ step, onOptionsChange }: Props) => {
 
   const clearOptions = () => {
     setResponseData({ status: '' })
+
     setTestResponse(undefined)
+
     setSuccessTest('')
   }
 
   const handleUrlChange = (url: string) => {
     clearOptions()
+
     setWebhookUrl(url)
   }
 
@@ -114,6 +125,7 @@ export const WebhookSettings = ({ step, onOptionsChange }: Props) => {
       if (newUrl.search) handleParams(newUrl.search.replace(/_hash_/g, '#'))
 
       setWebhookUrl(newUrl.origin)
+
       setPath(newUrl.pathname?.replace(/_hash_/g, '#') || '')
 
       onOptionsChange({
@@ -127,6 +139,7 @@ export const WebhookSettings = ({ step, onOptionsChange }: Props) => {
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === '#') {
       e.preventDefault()
+
       setVariablesKeyDown(e)
     }
   }
@@ -139,14 +152,19 @@ export const WebhookSettings = ({ step, onOptionsChange }: Props) => {
 
   const handleParams = (url: string) => {
     const params = url.substring(1).split('&')
+
     params.forEach((p) => {
       const keyValue = p.split('=')
+
       if (keyValue.length === 2) {
         const paramAlreadyExists = step.options.parameters.find(
           (param) => param.key === keyValue[0]
         )
+
         if (paramAlreadyExists) return
+
         const paramValueTrimmed = keyValue[1].replace('/', '')
+
         addParams('query', keyValue[0], paramValueTrimmed, paramValueTrimmed)
       }
     })
@@ -178,6 +196,7 @@ export const WebhookSettings = ({ step, onOptionsChange }: Props) => {
 
   const handleMethodChange = (method: HttpMethodsWebhook) => {
     if (step.options.method != method) clearOptions()
+
     onOptionsChange({
       ...step.options,
       method: method,
@@ -186,6 +205,7 @@ export const WebhookSettings = ({ step, onOptionsChange }: Props) => {
 
   const handleQueryParamsChange = (parameters: QueryParameters[]) => {
     const properties = parameters.flatMap((p) => p.properties).filter((s) => s)
+
     if (properties?.length) {
       handleAddedVariables(properties.map((s) => s?.token))
     }
@@ -198,6 +218,7 @@ export const WebhookSettings = ({ step, onOptionsChange }: Props) => {
 
   const handleHeadersChange = (headers: QueryParameters[]) => {
     const properties = headers.flatMap((p) => p.properties).filter((s) => s)
+
     if (properties?.length) {
       handleAddedVariables(properties.map((s) => s?.token))
     }
@@ -213,14 +234,44 @@ export const WebhookSettings = ({ step, onOptionsChange }: Props) => {
   const codeVariableSelected = (
     variable: Pick<Variable, 'id' | 'name' | 'token'>
   ) => {
+    setPrevSelectedVariablesForTest(step.options.variablesForTest)
+
     handleAddedVariables([variable?.token])
   }
 
+  const getUnusedParams = (body: string) => {
+    const selectedVariables =
+      prevSelectedVariablesForTest ?? step.options.variablesForTest
+
+    if (!selectedVariables) {
+      return []
+    }
+
+    const unusedParams: VariableForTest[] = []
+
+    selectedVariables.forEach((p: VariableForTest) => {
+      const found = body.indexOf(p.token) > -1
+
+      if (found === false) {
+        unusedParams.push(p)
+      }
+    })
+
+    return unusedParams
+  }
+
   const handleBodyChange = (body: string) => {
+    const unusedParams = getUnusedParams(body)
+
     onOptionsChange({
       ...step.options,
       body,
+      variablesForTest: step.options.variablesForTest.filter(
+        (p) => unusedParams.includes(p) === false
+      ),
     })
+
+    setPrevSelectedVariablesForTest(undefined)
   }
 
   const handleAddedVariables = (addedVariables: Array<string | undefined>) => {
