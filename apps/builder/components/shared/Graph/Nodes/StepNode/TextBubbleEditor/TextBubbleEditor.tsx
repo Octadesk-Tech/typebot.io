@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useState } from 'react'
 import { Flex, Stack, useOutsideClick } from '@chakra-ui/react'
 import {
   Plate,
+  PlateEditor,
   selectEditor,
   serializeHtml,
   TEditor,
@@ -10,7 +11,14 @@ import {
   withPlate,
 } from '@udecode/plate-core'
 import { editorStyle, platePlugins } from 'libs/plate'
-import { BaseEditor, BaseSelection, createEditor, Transforms } from 'slate'
+import {
+  BaseEditor,
+  BaseSelection,
+  createEditor,
+  Node,
+  Path,
+  Transforms,
+} from 'slate'
 import { ReactEditor } from 'slate-react'
 import { defaultTextBubbleContent, TextBubbleContent, Variable } from 'models'
 import { parseHtmlStringToPlainText } from 'services/utils'
@@ -22,6 +30,7 @@ type TextBubbleEditorProps = {
   onClose: (newContent: TextBubbleContent) => void
   onKeyUp?: (newContent: TextBubbleContent) => void
   increment?: number
+  maxLength?: number
 }
 
 export const TextBubbleEditor = ({
@@ -29,8 +38,10 @@ export const TextBubbleEditor = ({
   onClose,
   onKeyUp,
   increment,
+  maxLength,
 }: TextBubbleEditorProps) => {
   const [value, setValue] = useState(initialValue)
+
   const [isVariableDropdownOpen, setIsVariableDropdownOpen] = useState(false)
   const varDropdownRef = useRef<HTMLDivElement | null>(null)
   const rememberedSelection = useRef<BaseSelection | null>(null)
@@ -46,10 +57,32 @@ export const TextBubbleEditor = ({
       withPlate(createEditor() as TEditor<Value>, {
         id: randomEditorId,
         plugins: platePlugins,
-      }),
+      }) as PlateEditor,
     [randomEditorId]
   )
+  const withMaxLength = (editor: PlateEditor) => {
+    editor.normalizeNode = (entry: [Node, Path]) => {
+      const [node, path] = entry
+      const nodeText = Node.string(node)
+      if (maxLength && nodeText.length > maxLength) {
+        const newNodes = [
+          {
+            type: 'p',
+            children: [{ text: nodeText.slice(0, maxLength) }],
+          },
+        ]
+        Transforms.removeNodes(editor as BaseEditor, {
+          at: path,
+        })
 
+        Transforms.insertNodes(editor as BaseEditor, newNodes, { at: path })
+
+        return
+      }
+    }
+
+    return editor
+  }
   const closeEditor = () => {
     if (onClose) onClose(convertValueToStepContent(value))
   }
@@ -152,7 +185,7 @@ export const TextBubbleEditor = ({
             : initialValue
         }
         onChange={handleChangeEditorContent}
-        editor={editor}
+        editor={withMaxLength(editor)}
       />
       {isVariableDropdownOpen && (
         <Flex
