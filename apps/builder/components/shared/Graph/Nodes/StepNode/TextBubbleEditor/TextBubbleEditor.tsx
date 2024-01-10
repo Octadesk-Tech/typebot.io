@@ -128,6 +128,16 @@ export const TextBubbleEditor = ({
   }
 
   const handleChangeEditorContent = (val: TElement[]) => {
+    const plainText = val.map((node) => Node.string(node)).join(' ')
+
+    if (maxLength && plainText.length > maxLength) {
+      const truncatedText = plainText.slice(0, maxLength)
+
+      const newValue = [{ type: 'p', children: [{ text: truncatedText }] }]
+      setValue(newValue)
+      return
+    }
+
     const timeout = setTimeout(() => {
       if (timeout) clearTimeout(timeout)
       setValue(val)
