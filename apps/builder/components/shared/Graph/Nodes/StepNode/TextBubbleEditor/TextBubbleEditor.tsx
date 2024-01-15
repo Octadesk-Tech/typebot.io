@@ -64,18 +64,34 @@ export const TextBubbleEditor = ({
     editor.normalizeNode = (entry: [Node, Path]) => {
       const [node, path] = entry
       const nodeText = Node.string(node)
-      if (maxLength && nodeText.length > maxLength) {
+      const currentLength = nodeText.length
+      if (maxLength && currentLength > maxLength) {
+        const lengthUntilBeforeTheLastNode = editor.children.reduce(
+          (acc, curr, i) => {
+            if (i === editor.children.length - 1) return acc
+            return acc + Node.string(curr).length
+          },
+          0
+        )
+        const lastNode = editor.children[editor.children.length - 1]
+
         const newNodes = [
           {
             type: 'p',
-            children: [{ text: nodeText.slice(0, maxLength) }],
+            children: [
+              {
+                text: Node.string(lastNode).slice(
+                  0,
+                  maxLength - lengthUntilBeforeTheLastNode
+                ),
+              },
+            ],
           },
         ]
         Transforms.removeNodes(editor as BaseEditor, {
-          at: path,
+          match: (n) => n === lastNode,
         })
-
-        Transforms.insertNodes(editor as BaseEditor, newNodes, { at: path })
+        Transforms.insertNodes(editor as BaseEditor, newNodes)
 
         return
       }
