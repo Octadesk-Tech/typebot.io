@@ -94,6 +94,7 @@ export const WhatsAppButtonsListSettingsBody = ({
             options.header?.content ? options.header.content.richText : []
           }
           onKeyUp={handleHeaderText}
+          maxLength={MAX_LENGHT_HEADER_AND_FOOTER}
         />
       </Stack>
       <Stack>
@@ -112,6 +113,7 @@ export const WhatsAppButtonsListSettingsBody = ({
             options.body?.content ? options.body.content.richText : []
           }
           onKeyUp={handleBodyText}
+          maxLength={MAX_LENGHT_BODY}
         />
       </Stack>
       <Stack>
@@ -130,6 +132,7 @@ export const WhatsAppButtonsListSettingsBody = ({
             options.footer?.content ? options.footer.content.richText : []
           }
           onKeyUp={handleFooterText}
+          maxLength={MAX_LENGHT_HEADER_AND_FOOTER}
         />
       </Stack>
       <Stack>
