@@ -69,6 +69,13 @@ export const TextBubbleEditor = ({
       nodes: v,
     }).replace(/<[^/>]*>\s*<\/[^>]*>/g, '')
 
+    if (!html) {
+      return {
+        html,
+        richText: v,
+      }
+    }
+
     return {
       html,
       richText: v,
