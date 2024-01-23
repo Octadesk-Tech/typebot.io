@@ -84,7 +84,7 @@ export const WhatsAppButtonsListSettingsBody = ({
           </FormLabel>
           <Spacer />
           <FormLabel mb="0" htmlFor="button">
-            {value.header.length}/{MAX_LENGHT_HEADER_AND_FOOTER}
+            {value?.header?.length ?? 0}/{MAX_LENGHT_HEADER_AND_FOOTER}
           </FormLabel>
         </Flex>
 
@@ -104,7 +104,7 @@ export const WhatsAppButtonsListSettingsBody = ({
           </FormLabel>
           <Spacer />
           <FormLabel mb="0" htmlFor="button">
-            {value.body.length}/{MAX_LENGHT_BODY}
+            {value?.body?.length ?? 0}/{MAX_LENGHT_BODY}
           </FormLabel>
         </Flex>
         <TextBubbleEditor
@@ -123,7 +123,7 @@ export const WhatsAppButtonsListSettingsBody = ({
           </FormLabel>
           <Spacer />
           <FormLabel mb="0" htmlFor="button">
-            {value.footer.length}/{MAX_LENGHT_HEADER_AND_FOOTER}
+            {value?.footer?.length ?? 0}/{MAX_LENGHT_HEADER_AND_FOOTER}
           </FormLabel>
         </Flex>
         <TextBubbleEditor
