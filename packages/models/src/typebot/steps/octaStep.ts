@@ -21,7 +21,7 @@ export type OctaStep =
 
 export type OctaWabaStep = WhatsAppOptionsListStep | WhatsAppButtonsListStep
 
-export type WOZStep = WOZSuggestionStep
+export type WOZStep = WOZSuggestionStep | WOZAssignStep
 
 // Bubble steps (editado na árvore)
 export type OctaBubbleStep = EndConversationStep
@@ -98,6 +98,11 @@ export type WOZSuggestionStep = StepBase & {
 export type ConversationTagStep = StepBase & {
   type: OctaStepType.CONVERSATION_TAG
   options: ConversationTagOptions
+}
+
+export type WOZAssignStep = StepBase & {
+  type: WOZStepType.ASSIGN
+  options: WOZAssignOptions
 }
 
 export type PreReserveStep = StepBase & {
@@ -243,6 +248,11 @@ export type ConversationTagOptions = BaseOctaOptions & {
 
 export type WOZSuggestionOptions = BaseOctaOptions & {
   preferredAnswer?: string
+}
+
+export type WOZAssignOptions = BaseOctaOptions & {
+  preferredAnswer?: string,
+  virtualAgentId: string
 }
 
 export type CallOtherBotOptions = BaseOctaOptions & {
@@ -401,6 +411,13 @@ export const defaultWOZSuggestionOptions: WOZSuggestionOptions = {
   subject: '',
 }
 
+export const defaultWOZAssignOptions: WOZAssignOptions = {
+  preferredAnswer: '',
+  name: '',
+  subject: '',
+  virtualAgentId: ''
+}
+
 export const defaultCallOtherBotOptions: CallOtherBotOptions = {
   id: '',
   botToCall: '',
@@ -410,20 +427,20 @@ export const defaultCallOtherBotOptions: CallOtherBotOptions = {
 
 const seeYa = 'Até mais!'
 export const defaultEndConversationBubbleContent: EndConversationBubbleContent =
-  {
-    html: `<div style="margin-left: 8px;">${seeYa}</div>`,
-    richText: [
-      {
-        children: [
-          {
-            text: seeYa,
-          },
-        ],
-        type: 'p',
-      },
-    ],
-    plainText: seeYa,
-  }
+{
+  html: `<div style="margin-left: 8px;">${seeYa}</div>`,
+  richText: [
+    {
+      children: [
+        {
+          text: seeYa,
+        },
+      ],
+      type: 'p',
+    },
+  ],
+  plainText: seeYa,
+}
 
 export const defaultCommerceOptions: CommerceOptions = {
   catalogId: '',

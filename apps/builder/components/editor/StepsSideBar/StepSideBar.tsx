@@ -288,7 +288,7 @@ export const StepsSideBar = () => {
         {wozSteps.length &&
           <Stack>
             <Text fontSize="sm" fontWeight="semibold" color="gray.600">
-              WOZ - IA da Octa
+              WOZ
             </Text>
             <SimpleGrid columns={1} spacing="3">
               {wozSteps.map((type) => (

@@ -4,7 +4,8 @@ import {
   PopoverBody,
   useEventListener,
   Portal,
-  IconButton} from '@chakra-ui/react'
+  IconButton
+} from '@chakra-ui/react'
 import { ExpandIcon } from 'assets/icons'
 import {
   InputStepType,
@@ -29,7 +30,8 @@ import {
   WhatsAppOptionsListSettingsBody,
   WhatsAppButtonsListSettingsBody,
   WOZSuggestionSettingBody,
-  ConversationTagBody
+  ConversationTagBody,
+  WOZAssignSettingBody
 } from './bodies'
 import { ChoiceInputSettingsBody } from './bodies/ChoiceInputSettingsBody'
 import { CodeSettings } from './bodies/CodeSettings'
@@ -232,6 +234,17 @@ export const StepSettings = ({
         />
       )
     }
+    case WOZStepType.ASSIGN: {
+      console.log('step.options', step.options)
+      return (
+        <WOZAssignSettingBody
+          options={
+            step.options
+          }
+          onOptionsChange={handleOptionsChange}
+        />
+      )
+    }
     case OctaStepType.CALL_OTHER_BOT: {
       return (
         <CallOtherBotSettingsBody
@@ -261,7 +274,7 @@ export const StepSettings = ({
           onOptionsChange={handleOptionsChange}
         />
       )
-    } 
+    }
     case OctaWabaStepType.WHATSAPP_OPTIONS_LIST: {
       return (
         <WhatsAppOptionsListSettingsBody
@@ -309,7 +322,7 @@ export const StepSettings = ({
           onContentChange={handleContentChange}
         />
       )
-    }   
+    }
     default:
       return (<span></span>)
   }

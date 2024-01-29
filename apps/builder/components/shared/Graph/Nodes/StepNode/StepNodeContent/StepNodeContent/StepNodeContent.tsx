@@ -36,6 +36,7 @@ import { MediaInputContent } from '../contents/MediaInput'
 import { InputItemsContent } from '../contents/InputItemsContent'
 import { WOZSuggestionContent } from '../contents/WOZSuggestion'
 import { ConversationTagContent } from '../contents/ConversationTag'
+import { WOZAssignContent } from '../contents/WOZAssign'
 // import { ProviderWebhookContent } from './contents/ZapierContent'
 
 type Props = {
@@ -59,13 +60,13 @@ export const StepNodeContent = ({ step, indices }: Props) => {
     case BubbleStepType.TEXT: {
       return <TextBubbleContent step={step} />
     }
-    case BubbleStepType.MEDIA: 
-    return (
-      <MediaInputContent step={step} />
-    )
+    case BubbleStepType.MEDIA:
+      return (
+        <MediaInputContent step={step} />
+      )
     case InputStepType.TEXT:
     case InputStepType.ASK_NAME:
-    case InputStepType.EMAIL: 
+    case InputStepType.EMAIL:
     case InputStepType.CPF:
     case InputStepType.DATE:
     case InputStepType.PHONE: {
@@ -190,6 +191,9 @@ export const StepNodeContent = ({ step, indices }: Props) => {
     }
     case OctaStepType.CONVERSATION_TAG: {
       return <ConversationTagContent step={step} />
+    }
+    case WOZStepType.ASSIGN: {
+      return <WOZAssignContent step={step} />
     }
     case 'start': {
       return <span></span>
