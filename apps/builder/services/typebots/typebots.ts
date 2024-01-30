@@ -54,6 +54,7 @@ import {
   WOZSuggestionOptions,
   defaultConversationTagOptions,
   ConversationTagOptions,
+  WOZAssignStep,
 } from 'models'
 import { Typebot } from 'models'
 import useSWR from 'swr'
@@ -216,6 +217,7 @@ const duplicateTypebot = (
               | OfficeHourStep
               | WhatsAppOptionsListStep
               | WhatsAppButtonsListStep
+              | WOZAssignStep
           }
 
           if (isWebhookStep(s)) {
@@ -328,11 +330,13 @@ const parseDefaultItems = (
     | OctaStepType.OFFICE_HOURS
     | IntegrationStepType.WEBHOOK
     | OctaWabaStepType.WHATSAPP_OPTIONS_LIST
-    | OctaWabaStepType.WHATSAPP_BUTTONS_LIST,
+    | OctaWabaStepType.WHATSAPP_BUTTONS_LIST
+    | WOZStepType.ASSIGN,
   stepId: string
 ): Item[] => {
   switch (type) {
     case InputStepType.CHOICE:
+    case WOZStepType.ASSIGN:
       return [{ id: cuid(), stepId, type: ItemType.BUTTON }]
     case OctaWabaStepType.WHATSAPP_OPTIONS_LIST:
       return [
