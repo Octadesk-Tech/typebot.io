@@ -15,6 +15,7 @@ type Props = {
 
 export const ConditionNodeContent = ({ item }: Props) => {
   const { typebot } = useTypebot()
+  
   return (
     <Flex px={2} py={2}>
       {item.content.comparisons.length === 0 ||
@@ -51,6 +52,14 @@ export const ConditionNodeContent = ({ item }: Props) => {
                     <Text noOfLines={0}>{comparison.value}</Text>
                   </Tag>
                 )}
+                {comparison?.secondaryValue && (
+                  <div>
+                    <span> E </span>
+                    <Tag bgColor={'gray.200'}>
+                      <Text noOfLines={0}>{comparison.value}</Text>
+                    </Tag>
+                  </div>
+                )}
               </Wrap>
             )
           })}
@@ -72,7 +81,6 @@ const parseLogicalOperatorSymbol = (operator: LogicalOperator) => {
 
 const parseComparisonOperatorSymbol = (operator: ComparisonOperators) => {
   const toCompare = Object.keys(ComparisonOperators).indexOf(operator)
-  console.log('parseComparisonOperatorSymbol', { toCompare, operator })
   switch (Object.values(ComparisonOperators)[toCompare]) {
     case ComparisonOperators.CONTAINS:
       return 'contém'
@@ -102,5 +110,7 @@ const parseComparisonOperatorSymbol = (operator: ComparisonOperators) => {
         return 'não termina com'
     case ComparisonOperators.NOT_CONTAINS:
         return 'não contém'
+    case ComparisonOperators.BETWEEN:
+        return ' estiver entre '
   }
 }
