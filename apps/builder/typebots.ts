@@ -246,16 +246,20 @@ const duplicateTypebot = (
       })),
       settings:
         typebot.settings.general.isBrandingEnabled === false &&
+        userPlan === Plan.FREE
           userPlan === Plan.FREE
-          ? {
+      ? {
+        ...typebot.settings,
+        general: { ...typebot.settings.general, isBrandingEnabled: true },
+      }
             ...typebot.settings,
-            general: { ...typebot.settings.general, isBrandingEnabled: true },
-          }
+    general: { ...typebot.settings.general, isBrandingEnabled: true },
+  }
           : typebot.settings,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+  createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     },
-    webhookIdsMapping,
+webhookIdsMapping,
   }
 }
 

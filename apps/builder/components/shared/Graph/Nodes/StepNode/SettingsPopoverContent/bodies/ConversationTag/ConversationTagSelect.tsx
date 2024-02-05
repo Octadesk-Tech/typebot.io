@@ -1,47 +1,40 @@
 import React, { useState, useLayoutEffect } from 'react'
-import OctaSelect from 'components/octaComponents/OctaSelect/OctaSelect'
 import { useTypebot } from 'contexts/TypebotContext'
 import { ConversationTagOptions } from 'models'
 import { OptionType } from 'components/octaComponents/OctaSelect/OctaSelect.type'
+import { Tag } from 'services/octadesk/tags/tags.types'
+import Select from 'react-select';
 
 type Props = {
   onSelect: (option: ConversationTagOptions) => void
-  selectedTag?: string
+  selectedTags?: Array<Tag>
 }
 
-export const ConversationTagSelect = ({ onSelect, selectedTag }: Props) => {
+export const ConversationTagSelect = ({ onSelect, selectedTags }: Props) => {
   const { tagsList } = useTypebot();
-  const [defaultSelected, setDefaultSelected] = useState<OptionType>()
+  const tagOptions: ConversationTagOptions = { tags: new Array<Tag> };
 
   const handleOnChange = (selected: any): void => {
-    onSelect(selected)
+    selected?.forEach((tg: any) => {
+      tagOptions.tags.push({
+        _id: tg.id,
+        name: tg.name
+      })
+    });
+
+    onSelect(tagOptions)
   }
 
-  useLayoutEffect(() => {
-    if (tagsList && selectedTag) {
-      const defaultSelectedTag = tagsList.filter((item) => item.id === selectedTag)[0];
-      if(defaultSelectedTag){
-        setDefaultSelected({
-          label: defaultSelectedTag.name,
-          value: {
-            tagId: defaultSelectedTag.id
-          },
-          key: ''
-        })
-      }
-    }
-    return () => {
-      setDefaultSelected(undefined)
-    };
-  }, [tagsList, selectedTag])
+  const defaultSelectedTags = selectedTags ? selectedTags.map(tag => tagsList.find(s => s._id === tag._id)) : [];
 
   return (
-    <OctaSelect
+    <Select
+      isMulti
       placeholder="Selecione uma tag"
-      defaultSelected={defaultSelected}
-      findable
-      options={tagsList}
+      defaultValue={defaultSelectedTags}
       onChange={handleOnChange}
+      options={tagsList}
+      closeMenuOnSelect={false}
     />
-  )
+  );
 }

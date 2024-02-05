@@ -331,7 +331,8 @@ const parseDefaultItems = (
     | IntegrationStepType.WEBHOOK
     | OctaWabaStepType.WHATSAPP_OPTIONS_LIST
     | OctaWabaStepType.WHATSAPP_BUTTONS_LIST
-    | WOZStepType.ASSIGN,
+    | WOZStepType.ASSIGN
+    | OctaWabaStepType.COMMERCE,
   stepId: string
 ): Item[] => {
   switch (type) {
@@ -394,6 +395,8 @@ const parseDefaultItems = (
           },
         },
       ]
+    case OctaWabaStepType.COMMERCE:
+      return []
     case IntegrationStepType.WEBHOOK:
       return [
         {
@@ -472,6 +475,7 @@ const parseOctaStepOptions = (
     case OctaStepType.PRE_RESERVE:
       return defaultPreReserveOptions
     case OctaStepType.CONVERSATION_TAG:
+      return defaultConversationTagOptions
       return defaultConversationTagOptions
     case WOZStepType.MESSAGE:
       return defaultWOZSuggestionOptions
