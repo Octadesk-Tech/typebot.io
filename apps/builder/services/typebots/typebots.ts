@@ -74,7 +74,12 @@ import {
 } from 'utils'
 import { dequal } from 'dequal'
 import { stringify } from 'qs'
-import { isChoiceInput, isConditionStep, sendRequest } from 'utils'
+import {
+  isChoiceInput,
+  isConditionStep,
+  sendRequest,
+  isOctaBubbleStep,
+} from 'utils'
 import cuid from 'cuid'
 import { diff } from 'deep-object-diff'
 import { duplicateWebhook } from 'services/webhook'
@@ -475,7 +480,6 @@ const parseOctaStepOptions = (
     case OctaStepType.PRE_RESERVE:
       return defaultPreReserveOptions
     case OctaStepType.CONVERSATION_TAG:
-      return defaultConversationTagOptions
       return defaultConversationTagOptions
     case WOZStepType.MESSAGE:
       return defaultWOZSuggestionOptions

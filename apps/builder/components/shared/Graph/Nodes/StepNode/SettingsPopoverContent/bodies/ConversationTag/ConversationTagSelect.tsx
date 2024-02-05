@@ -4,6 +4,8 @@ import { ConversationTagOptions } from 'models'
 import { OptionType } from 'components/octaComponents/OctaSelect/OctaSelect.type'
 import { Tag } from 'services/octadesk/tags/tags.types'
 import Select from 'react-select';
+import { Tag } from 'services/octadesk/tags/tags.types'
+import Select from 'react-select';
 
 type Props = {
   onSelect: (option: ConversationTagOptions) => void
@@ -31,7 +33,7 @@ export const ConversationTagSelect = ({ onSelect, selectedTags }: Props) => {
     <Select
       isMulti
       placeholder="Selecione uma tag"
-      defaultValue={defaultSelectedTags}
+      defaultValue={selectedTags}
       onChange={handleOnChange}
       options={tagsList}
       closeMenuOnSelect={false}
