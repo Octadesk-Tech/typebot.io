@@ -13,6 +13,8 @@ export const ConversationTagSelect = ({ onSelect, selectedTags }: Props) => {
   const { tagsList } = useTypebot();
   const tagOptions: ConversationTagOptions = { tags: new Array<Tag> };
 
+  const selectedOnTagsList = selectedTags?.map((tag: Tag) => tagsList.find(s => s._id === tag._id))
+
   const handleOnChange = (selected: any): void => {
     selected?.forEach((tg: any) => {
       tagOptions.tags.push({
@@ -28,7 +30,7 @@ export const ConversationTagSelect = ({ onSelect, selectedTags }: Props) => {
     <Select
       isMulti
       placeholder="Selecione uma tag"
-      defaultValue={selectedTags}
+      defaultValue={selectedOnTagsList}
       onChange={handleOnChange}
       options={tagsList}
       closeMenuOnSelect={false}
