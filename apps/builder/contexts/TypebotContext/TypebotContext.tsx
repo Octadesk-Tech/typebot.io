@@ -48,6 +48,7 @@ import Agents from 'services/octadesk/agents/agents'
 import Groups from 'services/octadesk/groups/groups'
 import { BotsService } from 'services/octadesk/bots/bots'
 import { ASSIGN_TO } from 'enums/assign-to'
+import { updateBlocksHasConnections } from 'helpers/block-connections'
 
 type UpdateTypebotPayload = Partial<{
   theme: Theme
@@ -166,14 +167,21 @@ export const TypebotContext = ({
 
   useEffect(() => {
     if (!typebot || !currentTypebotRef.current) return
+
+    const parsedTypebot = {
+      ...typebot,
+      blocks: updateBlocksHasConnections(typebot),
+    }
+
     if (typebotId !== currentTypebotRef.current.id) {
-      setLocalTypebot({ ...typebot }, { updateDate: false })
+      setLocalTypebot({ ...parsedTypebot }, { updateDate: false })
+
       flush()
     } else if (
       new Date(typebot.updatedAt) >
       new Date(currentTypebotRef.current.updatedAt)
     ) {
-      setLocalTypebot({ ...typebot })
+      setLocalTypebot({ ...parsedTypebot })
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -263,12 +271,22 @@ export const TypebotContext = ({
 
   useEffect(() => {
     if (isLoading) return
+
     if (!typebot) {
       toast({ status: 'info', description: "Couldn't find typebot" })
+
       router.replace(`${config.basePath || ''}/typebots`)
+
       return
     }
-    setLocalTypebot({ ...typebot })
+
+    const parsedTypebot = {
+      ...typebot,
+      blocks: updateBlocksHasConnections(typebot),
+    }
+
+    setLocalTypebot({ ...parsedTypebot })
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading])
 
@@ -581,7 +599,7 @@ export const TypebotContext = ({
         ...itemsAction(setLocalTypebot as SetTypebot),
         octaAgents,
         octaGroups,
-        botFluxesList
+        botFluxesList,
       }}
     >
       {children}
