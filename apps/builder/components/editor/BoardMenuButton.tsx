@@ -7,7 +7,7 @@ import {
   MenuList,
   useDisclosure,
 } from '@chakra-ui/react'
-import { MoreVerticalIcon, EyeIcon } from 'assets/icons'
+import { MoreVerticalIcon, EyeIcon, CheckIcon } from 'assets/icons'
 import { useTypebot } from 'contexts/TypebotContext'
 import { useUser } from 'contexts/UserContext'
 import { RightPanel, useEditor } from 'contexts/EditorContext'
@@ -76,7 +76,7 @@ export const BoardMenuButton = (props: MenuButtonProps) => {
           Visualizar
         </MenuItem>
 
-        <MenuItem icon={<EyeIcon />} onClick={handleToDoListClick}>
+        <MenuItem icon={<CheckIcon />} onClick={handleToDoListClick}>
           Lista de pendências
         </MenuItem>
       </MenuList>

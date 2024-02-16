@@ -50,6 +50,8 @@ const blocksActions = (setTypebot: SetTypebot): BlocksActions => ({
 
         typebot.blocks.push(newBlock)
 
+        typebot.blocks = updateBlocksHasConnections(typebot)
+
         createStepDraft(typebot, step, newBlock.id, indices)
       })
     ),
@@ -58,10 +60,14 @@ const blocksActions = (setTypebot: SetTypebot): BlocksActions => ({
       produce(typebot, (typebot) => {
         const block = typebot.blocks[blockIndex]
 
-        const hasConnection = !!typebot?.edges?.find(
+        let hasConnection = !!typebot?.edges?.find(
           (edge) =>
             edge.from.blockId === block.id || edge.to.blockId === block.id
         )
+
+        if (typebot?.blocks?.length <= 1) {
+          hasConnection = true
+        }
 
         typebot.blocks[blockIndex] = { ...block, ...updates, hasConnection }
       })
