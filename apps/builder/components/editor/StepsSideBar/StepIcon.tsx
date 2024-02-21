@@ -1,8 +1,6 @@
 import { IconProps } from '@chakra-ui/react'
 import {
-  BoxIcon,
   CalendarIcon,
-  ChatIcon,
   CheckSquareIcon,
   CodeIcon,
   CreditCardIcon,
@@ -12,19 +10,14 @@ import {
   FilmIcon,
   FilterIcon,
   FlagIcon,
-  GlobeIcon,
-  ImageIcon,
   LayoutIcon,
-  NumberIcon,
   PhoneIcon,
   SendEmailIcon,
   WavingHandIcon,
-  AlarmIcon,
   AssignToIcon,
   TextIcon,
   WebhookIcon,
   ListIcon,
-  RadioIcon,
   ContactCardIcon,
   AskNameIcon,
   PreReserveIcon,
@@ -32,14 +25,8 @@ import {
   CallBotIcon,
   CommerceIcon,
   WandIcon,
+  ConversationTagIcon,
 } from 'assets/icons'
-import {
-  GoogleAnalyticsLogo,
-  GoogleSheetsLogo,
-  MakeComLogo,
-  PabblyConnectLogo,
-  ZapierLogo,
-} from 'assets/logos'
 import {
   BubbleStepType,
   InputStepType,
@@ -53,8 +40,6 @@ import {
 } from 'models'
 import React from 'react'
 
-import { BsCalendar2Range } from 'react-icons/bs'
-import { MdStore } from 'react-icons/md'
 
 type StepIconProps = { type: StepType } & IconProps
 
@@ -65,6 +50,8 @@ export const StepIcon = ({ type, ...props }: StepIconProps) => {
       return <TextIcon color="#AA561C" {...props} />
     case WOZStepType.MESSAGE:
       return <WandIcon color="#AA561C" {...props} />
+    case WOZStepType.ASSIGN:
+      return <AssignToIcon color="#AA561C" {...props} />
     case BubbleStepType.MEDIA:
       return <LayoutIcon color="#AA561C" {...props} />
     case BubbleStepType.VIDEO:
@@ -118,6 +105,8 @@ export const StepIcon = ({ type, ...props }: StepIconProps) => {
       return <CommerceIcon color="#AA561C" />
     case OctaStepType.PRE_RESERVE:
       return <PreReserveIcon color="#373A86" {...props} />
+    case OctaStepType.CONVERSATION_TAG:
+      return <ConversationTagIcon color="#373A86" {...props} />      
     case 'start':
       return <FlagIcon {...props} />
     default:

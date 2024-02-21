@@ -24,12 +24,14 @@ const App = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => {
   useRouterProgressBar()
 
   const { query, pathname } = useRouter()
-
   const [env] = useState(process.env.NODE_ENV_OCTADESK || 'qa')
-
   const [isLoaded, setIsLoaded] = useState(env === 'production')
+  const [typebotId, setTypebotId] = useState(query.typebotId?.toString())
 
   useEffect(() => {
+    setIsLoaded(false)
+    if (query.typebotId) setTypebotId(query.typebotId?.toString())
+
     pathname.endsWith('/edit')
       ? (document.body.style.overflow = 'hidden')
       : (document.body.style.overflow = 'auto')
@@ -39,9 +41,7 @@ const App = ({ Component, pageProps: { session, ...pageProps } }: AppProps) => {
     setupMockUser().then(() => {
       setIsLoaded(true)
     })
-  }, [pathname])
-
-  const typebotId = query.typebotId?.toString()
+  }, [pathname, query])
 
   return (
     <ChakraProvider theme={customTheme}>

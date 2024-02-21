@@ -15,12 +15,13 @@ export type OctaStep =
   | CallOtherBotStep
   | PreReserveStep
   | CommerceStep
+  | ConversationTagStep
 
 // Waba steps
 
 export type OctaWabaStep = WhatsAppOptionsListStep | WhatsAppButtonsListStep
 
-export type WOZStep = WOZSuggestionStep
+export type WOZStep = WOZSuggestionStep | WOZAssignStep
 
 // Bubble steps (editado na árvore)
 export type OctaBubbleStep = EndConversationStep
@@ -32,6 +33,7 @@ export type OctaStepOptions =
   | CallOtherBotOptions
   | PreReserveOptions
   | CommerceOptions
+  | ConversationTagOptions
 
 export type OctaWabaStepOptions =
   | WhatsAppOptionsListOptions
@@ -44,6 +46,7 @@ export type OctaStepWithOptions =
   | OfficeHourStep
   | CallOtherBotStep
   | PreReserveStep
+  | ConversationTagStep
 
 // Steps that has variables on its body
 export type OctaBubbleStepContent = EndConversationBubbleContent
@@ -62,6 +65,7 @@ export enum OctaStepType {
   ASSIGN_TO_TEAM = 'assign to team',
   CALL_OTHER_BOT = 'call other bot',
   PRE_RESERVE = 'pre reserve',
+  CONVERSATION_TAG = 'conversation tag',
 }
 
 // Waba step types
@@ -89,6 +93,17 @@ export type AssignToTeamStep = StepBase & {
 export type WOZSuggestionStep = StepBase & {
   type: WOZStepType.MESSAGE
   options: WOZSuggestionOptions
+}
+
+export type ConversationTagStep = StepBase & {
+  type: OctaStepType.CONVERSATION_TAG
+  options: ConversationTagOptions
+}
+
+export type WOZAssignStep = StepBase & {
+  type: WOZStepType.ASSIGN
+  options: WOZAssignOptions,
+  items: []
 }
 
 export type PreReserveStep = StepBase & {
@@ -228,8 +243,19 @@ export type PreReserveOptions = BaseOctaOptions & {
   assignType: string
 }
 
+export type ConversationTagOptions = {
+  tags: Array<{
+    _id: string
+    name: string
+  }>
+}
+
 export type WOZSuggestionOptions = BaseOctaOptions & {
   preferredAnswer?: string
+}
+
+export type WOZAssignOptions = BaseOctaOptions & {
+  virtualAgentId?: string
 }
 
 export type CallOtherBotOptions = BaseOctaOptions & {
@@ -373,13 +399,26 @@ export const defaultPreReserveOptions: PreReserveOptions = {
   assignTo: '',
   assignType: '',
   name: '',
-  subject: '',
+  subject: ''
+}
+
+export const defaultConversationTagOptions: ConversationTagOptions = {
+  tags: [{
+    _id: '',
+    name: ''
+  }]
 }
 
 export const defaultWOZSuggestionOptions: WOZSuggestionOptions = {
   preferredAnswer: '',
   name: '',
   subject: '',
+}
+
+export const defaultWOZAssignOptions: WOZAssignOptions = {
+  name: '',
+  subject: '',
+  virtualAgentId: undefined
 }
 
 export const defaultCallOtherBotOptions: CallOtherBotOptions = {
@@ -391,20 +430,20 @@ export const defaultCallOtherBotOptions: CallOtherBotOptions = {
 
 const seeYa = 'Até mais!'
 export const defaultEndConversationBubbleContent: EndConversationBubbleContent =
-  {
-    html: `<div style="margin-left: 8px;">${seeYa}</div>`,
-    richText: [
-      {
-        children: [
-          {
-            text: seeYa,
-          },
-        ],
-        type: 'p',
-      },
-    ],
-    plainText: seeYa,
-  }
+{
+  html: `<div style="margin-left: 8px;">${seeYa}</div>`,
+  richText: [
+    {
+      children: [
+        {
+          text: seeYa,
+        },
+      ],
+      type: 'p',
+    },
+  ],
+  plainText: seeYa,
+}
 
 export const defaultCommerceOptions: CommerceOptions = {
   catalogId: '',

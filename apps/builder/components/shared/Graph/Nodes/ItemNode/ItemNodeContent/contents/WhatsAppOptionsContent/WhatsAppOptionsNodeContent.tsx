@@ -7,7 +7,7 @@ import {
   Flex,
 } from '@chakra-ui/react'
 import { useTypebot } from 'contexts/TypebotContext'
-import { PlusIcon } from 'assets/icons'
+import { PlusIcon, TrashIcon } from 'assets/icons'
 import { Item, ItemIndices, ItemType } from 'models'
 import React, { useEffect, useRef, useState } from 'react'
 import { isNotDefined } from 'utils'
@@ -23,7 +23,7 @@ export const WhatsAppOptionsNodeContent = ({
   indices,
   isMouseOver,
 }: Props) => {
-  const { deleteItem, updateItem, createItem, updateStep } = useTypebot()
+  const { deleteItem, updateItem, createItem } = useTypebot()
   const [initialContent] = useState(item.content ?? '')
   const [itemValue, setItemValue] = useState(item.content ?? 'Editar opção')
   const editableRef = useRef<HTMLDivElement | null>(null)
@@ -40,8 +40,10 @@ export const WhatsAppOptionsNodeContent = ({
     }
   }
 
+  const hasMoreThanOneItem = () => indices.itemsCount && indices.itemsCount > 1
+
   const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Escape' && itemValue === 'Editar opção') deleteItem(indices)
+    if (e.key === 'Escape' && itemValue === 'Editar opção' && hasMoreThanOneItem()) deleteItem(indices)
     if (e.key === 'Enter' && itemValue !== '' && initialContent === '')
       handlePlusClick()
   }
@@ -65,6 +67,10 @@ export const WhatsAppOptionsNodeContent = ({
     }
   }
 
+  const handleDeleteClick = () => {
+    deleteItem(indices)
+  }
+
   return (
     <Flex justify="center" w="100%" pos="relative">
       <Editable
@@ -85,7 +91,7 @@ export const WhatsAppOptionsNodeContent = ({
           px={4}
           py={2}
         />
-        <EditableInput px={4} py={2} />
+        <EditableInput px={4} py={2} maxLength={20} />
       </Editable>
       <Fade
         in={isMouseOver}
@@ -105,6 +111,15 @@ export const WhatsAppOptionsNodeContent = ({
           colorScheme="gray"
           onClick={handlePlusClick}
         />
+        {hasMoreThanOneItem() && (
+          <IconButton
+            aria-label="Delete item"
+            icon={<TrashIcon />}
+            size="xs"
+            shadow="md"
+            colorScheme="gray"
+            onClick={handleDeleteClick}
+          />)}
       </Fade>
     </Flex>
   )
