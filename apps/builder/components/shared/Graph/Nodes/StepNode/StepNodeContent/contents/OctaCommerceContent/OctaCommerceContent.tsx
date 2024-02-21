@@ -15,7 +15,10 @@ const OctaCommerceContent = ({ options }: Props) => {
     <Stack>
       <TextHtmlContent html={options.message?.html} />
       <OctaDivider />
-      {!options?.products?.length &&
+      {!options?.catalogId &&
+        <Text noOfLines={0}>Nenhum catálogo foi encontrado</Text>
+      }
+      {options?.catalogId && !options?.products?.length &&
         <Text noOfLines={0}>Nenhum produto selecionado</Text>
       }
       {options && options.products && options.products.length > 0 &&

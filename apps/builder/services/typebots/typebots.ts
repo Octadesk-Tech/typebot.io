@@ -15,19 +15,14 @@ import {
   BubbleStepContent,
   IntegrationStepType,
   defaultTextBubbleContent,
-  defaultImageBubbleContent,
   defaultVideoBubbleContent,
   defaultGenericInputOptions,
   defaultEmailInputOptions,
   defaultCpfInputOptions,
   defaultDateInputOptions,
   defaultPhoneInputOptions,
-  defaultUrlInputOptions,
   defaultChoiceInputOptions,
   defaultAskNameOptions,
-  defaultSetVariablesOptions,
-  defaultRedirectOptions,
-  defaultCodeOptions,
   defaultWebhookOptions,
   StepWithOptionsType,
   Item,
@@ -55,7 +50,11 @@ import {
   defaultPreReserveOptions,
   WOZStepType,
   defaultWOZSuggestionOptions,
+  defaultWOZAssignOptions,
   WOZSuggestionOptions,
+  defaultConversationTagOptions,
+  ConversationTagOptions,
+  WOZAssignStep,
 } from 'models'
 import { Typebot } from 'models'
 import useSWR from 'swr'
@@ -71,6 +70,7 @@ import {
   stepTypeHasItems,
   stepTypeHasOption,
   stepTypeHasWebhook,
+  isWOZStepType
 } from 'utils'
 import { dequal } from 'dequal'
 import { stringify } from 'qs'
@@ -85,8 +85,7 @@ import { diff } from 'deep-object-diff'
 import { duplicateWebhook } from 'services/webhook'
 import { Plan } from 'model'
 import { isDefined } from '@chakra-ui/utils'
-import { headers, services, subDomain } from '@octadesk-tech/services'
-import { config } from 'config/octadesk.config'
+import { subDomain } from '@octadesk-tech/services'
 import { sendOctaRequest } from 'util/octaRequest'
 
 export type TypebotInDashboard = Pick<
@@ -223,6 +222,7 @@ const duplicateTypebot = (
               | OfficeHourStep
               | WhatsAppOptionsListStep
               | WhatsAppButtonsListStep
+              | WOZAssignStep
           }
 
           if (isWebhookStep(s)) {
@@ -249,11 +249,11 @@ const duplicateTypebot = (
       })),
       settings:
         typebot.settings.general.isBrandingEnabled === false &&
-        userPlan === Plan.FREE
+          userPlan === Plan.FREE
           ? {
-              ...typebot.settings,
-              general: { ...typebot.settings.general, isBrandingEnabled: true },
-            }
+            ...typebot.settings,
+            general: { ...typebot.settings.general, isBrandingEnabled: true },
+          }
           : typebot.settings,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -307,19 +307,23 @@ export const parseNewStep = (
   blockId: string
 ): DraggableStep => {
   const id = cuid()
+
+  const options = isOctaStepType(type) || isWOZStepType(type)
+    ? parseOctaStepOptions(type)
+    : stepTypeHasOption(type)
+      ? parseDefaultStepOptions(type)
+      : undefined
+
   return {
     id,
     blockId,
     type,
-    content:
-      isBubbleStepType(type) || isOctaBubbleStepType(type)
-        ? parseDefaultContent(type)
-        : undefined,
-    options: isOctaStepType(type)
-      ? parseOctaStepOptions(type)
-      : stepTypeHasOption(type)
-      ? parseDefaultStepOptions(type)
+    content: isBubbleStepType(type) || isOctaBubbleStepType(type)
+      ? parseDefaultContent(type)
       : undefined,
+    options,
+
+    webhookId: stepTypeHasWebhook(type) ? cuid() : undefined,
     items: stepTypeHasItems(type) ? parseDefaultItems(type, id) : undefined,
   } as DraggableStep
 }
@@ -331,11 +335,14 @@ const parseDefaultItems = (
     | OctaStepType.OFFICE_HOURS
     | IntegrationStepType.WEBHOOK
     | OctaWabaStepType.WHATSAPP_OPTIONS_LIST
-    | OctaWabaStepType.WHATSAPP_BUTTONS_LIST,
+    | OctaWabaStepType.WHATSAPP_BUTTONS_LIST
+    | WOZStepType.ASSIGN
+    | OctaWabaStepType.COMMERCE,
   stepId: string
 ): Item[] => {
   switch (type) {
     case InputStepType.CHOICE:
+    case WOZStepType.ASSIGN:
       return [{ id: cuid(), stepId, type: ItemType.BUTTON }]
     case OctaWabaStepType.WHATSAPP_OPTIONS_LIST:
       return [
@@ -393,6 +400,8 @@ const parseDefaultItems = (
           },
         },
       ]
+    case OctaWabaStepType.COMMERCE:
+      return []
     case IntegrationStepType.WEBHOOK:
       return [
         {
@@ -451,8 +460,14 @@ const parseDefaultContent = (
   }
 }
 
-const parseOctaStepOptions = (type: OctaStepType | OctaWabaStepType | WOZStepType): OctaStepOptions | OctaWabaStepOptions | WOZSuggestionOptions | null => {
-
+const parseOctaStepOptions = (
+  type: OctaStepType | OctaWabaStepType | WOZStepType
+):
+  | OctaStepOptions
+  | OctaWabaStepOptions
+  | WOZSuggestionOptions
+  | ConversationTagOptions
+  | null => {
   switch (type) {
     case OctaStepType.ASSIGN_TO_TEAM:
       return defaultAssignToTeamOptions
@@ -464,8 +479,12 @@ const parseOctaStepOptions = (type: OctaStepType | OctaWabaStepType | WOZStepTyp
       return defaultCommerceOptions
     case OctaStepType.PRE_RESERVE:
       return defaultPreReserveOptions
+    case OctaStepType.CONVERSATION_TAG:
+      return defaultConversationTagOptions
     case WOZStepType.MESSAGE:
       return defaultWOZSuggestionOptions
+    case WOZStepType.ASSIGN:
+      return defaultWOZAssignOptions
     case OctaWabaStepType.WHATSAPP_OPTIONS_LIST:
       return defaultWhatsAppOptionsListOptions
     case OctaWabaStepType.WHATSAPP_BUTTONS_LIST:
