@@ -58,10 +58,19 @@ export const WhatsAppOptionsNodeContent = ({
       { ...indices, itemIndex }
     )
   }
-  
+
+  const handleEdit = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (e.button === 0) {
+      const target = e.target as HTMLInputElement
+      target.focus()
+      target.select()
+    }
+  }
+
   const handleDeleteClick = () => {
     deleteItem(indices)
   }
+
   return (
     <Flex justify="center" w="100%" pos="relative">
       <Editable
@@ -72,7 +81,8 @@ export const WhatsAppOptionsNodeContent = ({
         onSubmit={handleInputSubmit}
         onKeyDownCapture={handleKeyPress}
         flex="2"
-        w="full"       
+        w="full"
+        onClick={(e) => handleEdit(e)}
       >
         <EditablePreview
           w="full"
@@ -102,14 +112,14 @@ export const WhatsAppOptionsNodeContent = ({
           onClick={handlePlusClick}
         />
         {hasMoreThanOneItem() && (
-        <IconButton
-          aria-label="Delete item"
-          icon={<TrashIcon />}
-          size="xs"
-          shadow="md"
-          colorScheme="gray"
-          onClick={handleDeleteClick}
-        />)}
+          <IconButton
+            aria-label="Delete item"
+            icon={<TrashIcon />}
+            size="xs"
+            shadow="md"
+            colorScheme="gray"
+            onClick={handleDeleteClick}
+          />)}
       </Fade>
     </Flex>
   )
