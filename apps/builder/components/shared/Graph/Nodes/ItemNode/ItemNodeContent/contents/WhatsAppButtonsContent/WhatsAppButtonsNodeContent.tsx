@@ -66,8 +66,10 @@ export const WhatsAppButtonsNodeContent = ({
 
   const handleEdit = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (e.button === 0) {
-      const target = e.target as HTMLInputElement
+      const target = e.currentTarget as HTMLInputElement
+      const position = target.value.length;
       target.focus()
+      target.setSelectionRange(position, position)
     }
   }
 
@@ -113,14 +115,14 @@ export const WhatsAppButtonsNodeContent = ({
           onClick={handlePlusClick}
         />
         {hasMoreThanOneItem() && (
-        <IconButton
-          aria-label="Delete item"
-          icon={<TrashIcon />}
-          size="xs"
-          shadow="md"
-          colorScheme="gray"
-          onClick={handleDeleteClick}
-        />)}
+          <IconButton
+            aria-label="Delete item"
+            icon={<TrashIcon />}
+            size="xs"
+            shadow="md"
+            colorScheme="gray"
+            onClick={handleDeleteClick}
+          />)}
       </Fade>
     </Flex>
   )
