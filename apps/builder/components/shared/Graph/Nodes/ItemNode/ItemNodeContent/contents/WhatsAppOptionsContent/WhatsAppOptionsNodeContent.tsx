@@ -61,9 +61,10 @@ export const WhatsAppOptionsNodeContent = ({
 
   const handleEdit = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (e.button === 0) {
-      const target = e.target as HTMLInputElement
+      const target = e.currentTarget as HTMLInputElement
+      const position = target.value.length;
       target.focus()
-      target.select()
+      target.setSelectionRange(position, position)
     }
   }
 
