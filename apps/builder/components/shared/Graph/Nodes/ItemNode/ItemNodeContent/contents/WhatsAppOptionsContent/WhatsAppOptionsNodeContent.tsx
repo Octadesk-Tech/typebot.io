@@ -61,10 +61,11 @@ export const WhatsAppOptionsNodeContent = ({
 
   const handleEdit = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (e.button === 0) {
-      const target = e.currentTarget as HTMLInputElement
+      const target = e.target as HTMLInputElement
       const position = target.value.length;
-      target.focus()
+
       target.setSelectionRange(position, position)
+      target.focus()
     }
   }
 
@@ -83,7 +84,7 @@ export const WhatsAppOptionsNodeContent = ({
         onKeyDownCapture={handleKeyPress}
         flex="2"
         w="full"
-        onClick={(e) => handleEdit(e)}
+        onMouseDown={(e) => handleEdit(e)}
       >
         <EditablePreview
           w="full"
