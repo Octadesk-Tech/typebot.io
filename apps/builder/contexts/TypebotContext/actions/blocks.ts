@@ -60,16 +60,9 @@ const blocksActions = (setTypebot: SetTypebot): BlocksActions => ({
       produce(typebot, (typebot) => {
         const block = typebot.blocks[blockIndex]
 
-        let hasConnection = !!typebot?.edges?.find(
-          (edge) =>
-            edge.from.blockId === block.id || edge.to.blockId === block.id
-        )
+        typebot.blocks[blockIndex] = { ...block, ...updates }
 
-        if (typebot?.blocks?.length <= 1) {
-          hasConnection = true
-        }
-
-        typebot.blocks[blockIndex] = { ...block, ...updates, hasConnection }
+        typebot.blocks = updateBlocksHasConnections(typebot)
       })
     )
   },
