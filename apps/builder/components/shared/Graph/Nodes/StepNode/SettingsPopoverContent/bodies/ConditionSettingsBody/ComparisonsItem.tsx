@@ -139,23 +139,14 @@ export const ComparisonItem = ({
 
         </div>
       )}
-      <Fade
-        style={{
-          position: 'absolute',
-          bottom: '-15px',
-          zIndex: 3,
-          left: '90px',
-        }}
-      >
-        <IconButton
-          aria-label="Delete item"
-          icon={<TrashIcon />}
-          size="xs"
-          shadow="md"
-          colorScheme="gray"
-          onClick={handleDeleteClick}
-        />
-      </Fade>
+      <IconButton
+        aria-label="Delete item"
+        icon={<TrashIcon />}
+        size="xs"
+        shadow="md"
+        colorScheme="gray"
+        onClick={handleDeleteClick}
+      />
     </Stack>
   )
 }
