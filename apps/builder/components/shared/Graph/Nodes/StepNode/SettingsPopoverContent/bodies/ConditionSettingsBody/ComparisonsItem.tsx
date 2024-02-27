@@ -110,6 +110,14 @@ export const ComparisonItem = ({
 
   return (
     <Stack p="4" rounded="md" flex="1" borderWidth="1px">
+      <IconButton
+        aria-label="Delete item"
+        icon={<TrashIcon />}
+        size="xs"
+        shadow="md"
+        colorScheme="gray"
+        onClick={handleDeleteClick}
+      />
       <VariableSearchInput
         initialVariableId={item.variableId}
         onSelectVariable={handleSelectVariable}
@@ -136,14 +144,7 @@ export const ComparisonItem = ({
             onChange={handleChangeSecondaryValue}
             placeholder="Digite um valor..."
           />
-          <IconButton
-            aria-label="Delete item"
-            icon={<TrashIcon />}
-            size="xs"
-            shadow="md"
-            colorScheme="gray"
-            onClick={handleDeleteClick}
-          />
+
         </div>
       )}
 
