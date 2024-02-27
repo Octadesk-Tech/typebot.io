@@ -1,4 +1,4 @@
-import { Stack, IconButton } from '@chakra-ui/react'
+import { Stack, IconButton, Fade } from '@chakra-ui/react'
 import { TrashIcon } from 'assets/icons'
 import { DropdownList } from 'components/shared/DropdownList'
 import { Input } from 'components/shared/Textbox/Input'
@@ -87,7 +87,7 @@ export const ComparisonItem = ({
   }
 
   const handleDeleteClick = () => {
-    deleteItem(item)
+    deleteItem(item.id)
   }
 
   useEffect(() => {
@@ -110,14 +110,6 @@ export const ComparisonItem = ({
 
   return (
     <Stack p="4" rounded="md" flex="1" borderWidth="1px">
-      <IconButton
-        aria-label="Delete item"
-        icon={<TrashIcon />}
-        size="xs"
-        shadow="md"
-        colorScheme="gray"
-        onClick={handleDeleteClick}
-      />
       <VariableSearchInput
         initialVariableId={item.variableId}
         onSelectVariable={handleSelectVariable}
@@ -147,8 +139,23 @@ export const ComparisonItem = ({
 
         </div>
       )}
-
-
+      <Fade
+        style={{
+          position: 'absolute',
+          bottom: '-15px',
+          zIndex: 3,
+          left: '90px',
+        }}
+      >
+        <IconButton
+          aria-label="Delete item"
+          icon={<TrashIcon />}
+          size="xs"
+          shadow="md"
+          colorScheme="gray"
+          onClick={handleDeleteClick}
+        />
+      </Fade>
     </Stack>
   )
 }
