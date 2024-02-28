@@ -49,6 +49,7 @@ import Groups from 'services/octadesk/groups/groups'
 import { BotsService } from 'services/octadesk/bots/bots'
 import { ASSIGN_TO } from 'enums/assign-to'
 import { updateBlocksHasConnections } from 'helpers/block-connections'
+import { TagsService } from 'services/octadesk/tags/tags.service'
 
 type UpdateTypebotPayload = Partial<{
   theme: Theme
@@ -99,6 +100,7 @@ const typebotContext = createContext<
     octaAgents: Array<any>
     octaGroups: Array<any>
     botFluxesList: Array<any>
+    tagsList: Array<any>
     currentTypebot?: Typebot
   } & BlocksActions &
     StepsActions &
@@ -571,6 +573,40 @@ export const TypebotContext = ({
     }
   }, [])
 
+  const [tagsList, setTagsList] = useState<Array<any>>([])
+  useEffect(() => {
+    const fetchTags = async (): Promise<void> => {
+      const tagsList: Array<any> = []
+      Promise.all([
+        TagsService()
+          .getAll()
+          .then((res) => {
+            const itemList = res
+              .filter(function (tag: any) {
+                return tag?.status == 'active'
+              })
+              .sort((a: any, b: any) => a.name.localeCompare(b.name))
+              .map((tag: any, idx: number) => ({
+                ...tag,
+                label: tag.name,
+                value: { tag: tag.id },
+                key: `tg - ${idx}`,
+                isTitle: false,
+              }))
+
+            tagsList.push(...itemList)
+          }),
+      ])
+
+      setTagsList(tagsList)
+    }
+    fetchTags()
+
+    return () => {
+      setTagsList(() => [])
+    }
+  }, [])
+
   return (
     <typebotContext.Provider
       value={{
@@ -600,6 +636,7 @@ export const TypebotContext = ({
         octaAgents,
         octaGroups,
         botFluxesList,
+        tagsList,
       }}
     >
       {children}
