@@ -126,7 +126,8 @@ export const StepsSideBar = () => {
       type !== LogicStepType.CODE &&
       type !== LogicStepType.TYPEBOT_LINK &&
       type !== InputStepType.DATE &&
-      type !== OctaStepType.CALL_OTHER_BOT
+      type !== OctaStepType.CALL_OTHER_BOT &&
+      type !== WOZStepType.MESSAGE
     )
   }
 
