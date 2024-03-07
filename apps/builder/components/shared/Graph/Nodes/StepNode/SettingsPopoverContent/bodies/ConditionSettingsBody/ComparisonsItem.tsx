@@ -11,10 +11,12 @@ import { useEffect, useState } from 'react'
 export const ComparisonItem = ({
   item,
   onItemChange,
+  onRemoveItem
 }: TableListItemProps<Comparison>) => {
   const { typebot, deleteItem } = useTypebot()
   let myVariable = typebot?.variables?.find((v: Variable) => v.id === item?.variableId)
   let myComparisonOperator = item?.comparisonOperator
+
 
   const [needSecondaryValue, setNeedSecondaryValue] = useState<boolean>(!!item.secondaryValue)
   const [needValue, setNeedValue] = useState<boolean>(true)
@@ -87,7 +89,11 @@ export const ComparisonItem = ({
   }
 
   const handleDeleteClick = () => {
-    deleteItem(item.comparisonOperator)
+    console.log(item)
+
+    onRemoveItem({ ...item });
+
+
   }
 
   useEffect(() => {
