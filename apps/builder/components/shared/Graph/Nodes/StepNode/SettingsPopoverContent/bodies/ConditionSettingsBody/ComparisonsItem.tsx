@@ -87,7 +87,7 @@ export const ComparisonItem = ({
   }
 
   const handleDeleteClick = () => {
-    deleteItem(item.id)
+    deleteItem(item.comparisonOperator)
   }
 
   useEffect(() => {
