@@ -10,15 +10,7 @@ import {
   Spacer,
   Portal,
   HStack,
-  Button,
   useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
 } from '@chakra-ui/react'
 import { InfoIcon } from '@chakra-ui/icons'
 import {

@@ -34,6 +34,7 @@ export const ConditionNodeContent = ({ item }: Props) => {
                       ''}
                   </Text>
                 )}
+
                 {variable?.token && (
                   <Tag bgColor="orange.400" color="white">
                     {variable.token}

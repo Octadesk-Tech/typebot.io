@@ -48,6 +48,7 @@ import Agents from 'services/octadesk/agents/agents'
 import Groups from 'services/octadesk/groups/groups'
 import { BotsService } from 'services/octadesk/bots/bots'
 import { ASSIGN_TO } from 'enums/assign-to'
+import { updateBlocksHasConnections } from 'helpers/block-connections'
 import { TagsService } from 'services/octadesk/tags/tags.service'
 import { updateBlocksHasConnections } from 'helpers/block-connections'
 
