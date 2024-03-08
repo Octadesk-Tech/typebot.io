@@ -102,8 +102,7 @@ export type ConversationTagStep = StepBase & {
 
 export type WOZAssignStep = StepBase & {
   type: WOZStepType.ASSIGN
-  options: WOZAssignOptions,
-  items: []
+  options: WOZAssignOptions
 }
 
 export type PreReserveStep = StepBase & {
