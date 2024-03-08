@@ -420,7 +420,7 @@ export const defaultWOZAssignOptions: WOZAssignOptions = {
   name: '',
   subject: '',
   virtualAgentId: undefined,
-  introduceAsIA: false
+  introduceAsIA: true
 }
 
 export const defaultCallOtherBotOptions: CallOtherBotOptions = {
