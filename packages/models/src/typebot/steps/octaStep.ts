@@ -95,14 +95,15 @@ export type WOZSuggestionStep = StepBase & {
   options: WOZSuggestionOptions
 }
 
-export type ConversationTagStep = StepBase & {
-  type: OctaStepType.CONVERSATION_TAG
-  options: ConversationTagOptions
-}
-
 export type WOZAssignStep = StepBase & {
   type: WOZStepType.ASSIGN
   options: WOZAssignOptions
+  items: []
+}
+
+export type ConversationTagStep = StepBase & {
+  type: OctaStepType.CONVERSATION_TAG
+  options: ConversationTagOptions
 }
 
 export type PreReserveStep = StepBase & {
@@ -256,6 +257,7 @@ export type WOZSuggestionOptions = BaseOctaOptions & {
 export type WOZAssignOptions = BaseOctaOptions & {
   virtualAgentId?: string
   introduceAsIA: boolean
+  confirmContext: boolean
 }
 
 export type CallOtherBotOptions = BaseOctaOptions & {
@@ -419,7 +421,8 @@ export const defaultWOZAssignOptions: WOZAssignOptions = {
   name: '',
   subject: '',
   virtualAgentId: undefined,
-  introduceAsIA: true
+  introduceAsIA: true,
+  confirmContext: false
 }
 
 export const defaultCallOtherBotOptions: CallOtherBotOptions = {
