@@ -137,6 +137,9 @@ const useUndo = <T>(initialPresent: T): [State<T>, Actions<T>] => {
       presentRef.current = updatedTypebot
       if (updatedTypebot?.blocks) {
         updatedTypebot.blocks = updateBlocksHasConnections(updatedTypebot)
+        updatedTypebot.hasPendingIssues = updatedTypebot.blocks.some(
+          (b) => !b.hasConnection
+        )
       }
 
       dispatch({
