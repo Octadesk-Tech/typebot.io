@@ -9,13 +9,19 @@ import {
 import { TextBubbleContent, WOZStepType } from './bubble'
 
 // Regular steps
-export type OctaStep = AssignToTeamStep | OfficeHourStep | CallOtherBotStep | PreReserveStep | CommerceStep | ConversationTagStep
+export type OctaStep =
+  | AssignToTeamStep
+  | OfficeHourStep
+  | CallOtherBotStep
+  | PreReserveStep
+  | CommerceStep
+  | ConversationTagStep
 
 // Waba steps
 
 export type OctaWabaStep = WhatsAppOptionsListStep | WhatsAppButtonsListStep
 
-export type WOZStep = WOZSuggestionStep
+export type WOZStep = WOZSuggestionStep | WOZAssignStep
 
 // Bubble steps (editado na árvore)
 export type OctaBubbleStep = EndConversationStep
@@ -59,7 +65,7 @@ export enum OctaStepType {
   ASSIGN_TO_TEAM = 'assign to team',
   CALL_OTHER_BOT = 'call other bot',
   PRE_RESERVE = 'pre reserve',
-  CONVERSATION_TAG = 'conversation tag'
+  CONVERSATION_TAG = 'conversation tag',
 }
 
 // Waba step types
@@ -87,6 +93,12 @@ export type AssignToTeamStep = StepBase & {
 export type WOZSuggestionStep = StepBase & {
   type: WOZStepType.MESSAGE
   options: WOZSuggestionOptions
+}
+
+export type WOZAssignStep = StepBase & {
+  type: WOZStepType.ASSIGN
+  options: WOZAssignOptions
+  items: []
 }
 
 export type ConversationTagStep = StepBase & {
@@ -240,6 +252,12 @@ export type ConversationTagOptions = {
 
 export type WOZSuggestionOptions = BaseOctaOptions & {
   preferredAnswer?: string
+}
+
+export type WOZAssignOptions = BaseOctaOptions & {
+  virtualAgentId?: string
+  introduceAsIA: boolean
+  confirmContext: boolean
 }
 
 export type CallOtherBotOptions = BaseOctaOptions & {
@@ -397,6 +415,14 @@ export const defaultWOZSuggestionOptions: WOZSuggestionOptions = {
   preferredAnswer: '',
   name: '',
   subject: '',
+}
+
+export const defaultWOZAssignOptions: WOZAssignOptions = {
+  name: '',
+  subject: '',
+  virtualAgentId: undefined,
+  introduceAsIA: true,
+  confirmContext: false
 }
 
 export const defaultCallOtherBotOptions: CallOtherBotOptions = {

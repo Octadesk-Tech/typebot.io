@@ -50,6 +50,7 @@ import {
   defaultCallOtherBotOptions,
   defaultPreReserveOptions,
   defaultWOZSuggestionOptions,
+  defaultWOZAssignOptions,
   WOZStepType,
   WOZSuggestionOptions,
   ConversationTagOptions,
@@ -302,21 +303,24 @@ export const parseNewStep = (
   type: DraggableStepType,
   blockId: string
 ): DraggableStep => {
+  console.log('parseNewStep', type, blockId)
   const id = cuid()
 
-  const options = isOctaStepType(type) || isWOZStepType(type)
-    ? parseOctaStepOptions(type)
-    : stepTypeHasOption(type)
-      ? parseDefaultStepOptions(type)
-      : undefined
+  const options =
+    isOctaStepType(type) || isWOZStepType(type)
+      ? parseOctaStepOptions(type)
+      : stepTypeHasOption(type)
+        ? parseDefaultStepOptions(type)
+        : undefined
 
   return {
     id,
     blockId,
     type,
-    content: isBubbleStepType(type) || isOctaBubbleStepType(type)
-      ? parseDefaultContent(type)
-      : undefined,
+    content:
+      isBubbleStepType(type) || isOctaBubbleStepType(type)
+        ? parseDefaultContent(type)
+        : undefined,
     options,
 
     webhookId: stepTypeHasWebhook(type) ? cuid() : undefined,
@@ -380,6 +384,8 @@ const parseOctaStepOptions = (type: OctaStepType | OctaWabaStepType | WOZStepTyp
       return defaultWOZSuggestionOptions
     case OctaStepType.CONVERSATION_TAG:
       return defaultConversationTagOptions
+    case WOZStepType.ASSIGN:
+      return defaultWOZAssignOptions
     default:
       return null
   }

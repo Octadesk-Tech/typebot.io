@@ -15,11 +15,10 @@ type Props = {
 
 export const ConditionNodeContent = ({ item }: Props) => {
   const { typebot } = useTypebot()
-
   return (
     <Flex px={2} py={2}>
       {item.content.comparisons.length === 0 ||
-      comparisonIsEmpty(item.content.comparisons[0]) ? (
+        comparisonIsEmpty(item.content.comparisons[0]) ? (
         <Text color={'gray.500'}>Adicionar uma regra...</Text>
       ) : (
         <Stack maxW="170px">
