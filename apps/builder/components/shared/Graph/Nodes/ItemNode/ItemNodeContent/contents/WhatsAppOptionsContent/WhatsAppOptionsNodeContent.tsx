@@ -59,7 +59,7 @@ export const WhatsAppOptionsNodeContent = ({
     )
   }
 
-  const handleEdit = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleEdit = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.button === 0) {
       const target = e.target as HTMLInputElement
 
