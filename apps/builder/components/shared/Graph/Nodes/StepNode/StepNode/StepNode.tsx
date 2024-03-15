@@ -255,7 +255,7 @@ export const StepNode = ({
                             />
                           </>
                         )}
-                        {!unreachableNode &&
+                        {!unreachableNode && validationMessages?.length &&
                           validationMessages?.map((s, index) => {
                             return (
                               <OctaTooltip
