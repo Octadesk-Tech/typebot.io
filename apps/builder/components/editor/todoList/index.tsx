@@ -157,8 +157,6 @@ export const ToDoList = () => {
                     background="#F4F4F5"
                   >
                     <Flex alignItems="center" gap="2">
-                      <StepIcon type={InputStepType.ASK_NAME} />
-
                       <StepTitle>{item.title}</StepTitle>
                     </Flex>
                   </Flex>
