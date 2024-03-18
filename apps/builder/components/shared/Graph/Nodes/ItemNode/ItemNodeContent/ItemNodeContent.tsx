@@ -4,7 +4,7 @@ import { ButtonNodeContent } from './contents/ButtonNodeContent'
 import { ConditionNodeContent } from './contents/ConditionNodeContent'
 import { OfficeHoursNodeContent } from './contents/OfficeHoursNodeContent'
 import { WebhookNodeContent } from './contents/WebhooksNodeContent/WebhookNodeContent'
-import { WhatsAppOptionsNodeContent } from './contents/WhatsAppOptionsContent'
+import { WhatsAppOptionsNodeContent } from './contents/WhatsAppOptionsContent/WhatsAppOptionsNodeContent'
 import { WhatsAppButtonsNodeContent } from './contents/WhatsAppButtonsContent'
 
 type Props = {

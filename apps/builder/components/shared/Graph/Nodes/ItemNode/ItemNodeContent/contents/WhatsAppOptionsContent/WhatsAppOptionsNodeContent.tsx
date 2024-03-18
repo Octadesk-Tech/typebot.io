@@ -83,7 +83,7 @@ export const WhatsAppOptionsNodeContent = ({
         onKeyDownCapture={handleKeyPress}
         flex="2"
         w="full"
-        onClick={(e) => handleEdit(e)}
+
       >
         <EditablePreview
           w="full"
