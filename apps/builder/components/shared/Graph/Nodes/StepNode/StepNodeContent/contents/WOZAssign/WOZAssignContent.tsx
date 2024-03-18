@@ -18,7 +18,7 @@ const WOZAssignContent = ({ step, indices }: Props) => {
       </Text>
       <OctaDivider />
       <Text noOfLines={0}>
-        Apresenta-se como IA? {step?.options?.introduceAsIA ? 'Sim' : 'Não'}
+        Deve se apresentar como IA? {step?.options?.introduceAsIA ? 'Sim' : 'Não'}
       </Text>
       <OctaDivider />
       <Text noOfLines={0}>
