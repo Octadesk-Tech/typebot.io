@@ -64,9 +64,10 @@ export const WhatsAppButtonsNodeContent = ({
     deleteItem(indices)
   }
 
-  const handleEdit = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleEdit = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (e.button === 0) {
       const target = e.target as HTMLInputElement
+      target.focus()
       target.select()
     }
   }
