@@ -50,6 +50,10 @@ import { BotsService } from 'services/octadesk/bots/bots'
 import { ASSIGN_TO } from 'enums/assign-to'
 import { TagsService } from 'services/octadesk/tags/tags.service'
 import { updateBlocksHasConnections } from 'helpers/block-connections'
+import useEmptyFields, {
+  ActionsTypeEmptyFields,
+  EmptyFields,
+} from 'services/utils/useEmptyFields'
 
 type UpdateTypebotPayload = Partial<{
   theme: Theme
@@ -68,9 +72,15 @@ type SaveResponse = {
 export type SetTypebot = (
   newPresent: Typebot | ((current: Typebot) => Typebot)
 ) => void
+export type SetEmptyFields = (
+  values: EmptyFields[] | string[],
+  action: ActionsTypeEmptyFields
+) => void
 const typebotContext = createContext<
   {
     typebot?: Typebot
+    emptyFields: EmptyFields[]
+    setEmptyFields: SetEmptyFields
     publishedTypebot?: PublicTypebot
     linkedTypebots?: Typebot[]
     isReadOnly?: boolean
@@ -103,10 +113,10 @@ const typebotContext = createContext<
     tagsList: Array<any>
     currentTypebot?: Typebot
   } & BlocksActions &
-  StepsActions &
-  ItemsActions &
-  VariablesActions &
-  EdgesActions
+    StepsActions &
+    ItemsActions &
+    VariablesActions &
+    EdgesActions
 >({} as any)
 
 export const TypebotContext = ({
@@ -132,6 +142,10 @@ export const TypebotContext = ({
         }),
     })
 
+  const updateLocalTypebot = (updates: UpdateTypebotPayload) =>
+    localTypebot && setLocalTypebot({ ...localTypebot, ...updates })
+
+  const { emptyFields, setEmptyFields } = useEmptyFields()
   const [
     { present: localTypebot },
     {
@@ -150,7 +164,7 @@ export const TypebotContext = ({
     .reduce<string[]>(
       (typebotIds, step) =>
         step.type === LogicStepType.TYPEBOT_LINK &&
-          isDefined(step.options.typebotId)
+        isDefined(step.options.typebotId)
           ? [...typebotIds, step.options.typebotId]
           : typebotIds,
       []
@@ -188,6 +202,18 @@ export const TypebotContext = ({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [typebot])
+
+  useEffect(() => {
+    if (!localTypebot) return
+    const hasBlocksWithoutConection = localTypebot.blocks.some(
+      (b) => !b.hasConnection
+    )
+    const hasPendingIssues = hasBlocksWithoutConection || emptyFields.length > 0
+
+    if (localTypebot?.hasPendingIssues === hasPendingIssues) return
+
+    updateLocalTypebot({ hasPendingIssues })
+  }, [localTypebot?.edges, emptyFields])
 
   const saveTypebot = async (
     personaName?: string,
@@ -314,9 +340,6 @@ export const TypebotContext = ({
     [localTypebot]
   )
 
-  const updateLocalTypebot = (updates: UpdateTypebotPayload) =>
-    localTypebot && setLocalTypebot({ ...localTypebot, ...updates })
-
   const publishTypebot = async () => {
     if (!localTypebot) return
     const publishedTypebotId = cuid()
@@ -412,53 +435,53 @@ export const TypebotContext = ({
 
         const agentPromise = shouldGetAgents
           ? Agents()
-            .getAgents()
-            .then((res) => {
-              let agentsList = res
-                .sort((a: any, b: any) => a.name.localeCompare(b.name))
-                .map((agent: any) => ({
-                  ...agent,
-                  operationType: ASSIGN_TO.agent,
-                }))
+              .getAgents()
+              .then((res) => {
+                let agentsList = res
+                  .sort((a: any, b: any) => a.name.localeCompare(b.name))
+                  .map((agent: any) => ({
+                    ...agent,
+                    operationType: ASSIGN_TO.agent,
+                  }))
 
-              agentsList = [
-                {
-                  name: 'Atribuir a conversa para um usuário',
-                  disabled: true,
-                  id: 'agent',
-                  isTitle: true,
-                },
-                ...agentsList,
-              ]
+                agentsList = [
+                  {
+                    name: 'Atribuir a conversa para um usuário',
+                    disabled: true,
+                    id: 'agent',
+                    isTitle: true,
+                  },
+                  ...agentsList,
+                ]
 
-              agentsGroupsList.push(...agentsList)
-            })
+                agentsGroupsList.push(...agentsList)
+              })
           : undefined
 
         const groupPromise = shouldGetGroups
           ? Groups()
-            .getGroups()
-            .then((res) => {
-              let groupsList: Array<any> = []
-              const groups = res
-                .sort((a: any, b: any) => a.name.localeCompare(b.name))
-                .map((group: any) => ({
-                  ...group,
-                  operationType: ASSIGN_TO.group,
-                }))
+              .getGroups()
+              .then((res) => {
+                let groupsList: Array<any> = []
+                const groups = res
+                  .sort((a: any, b: any) => a.name.localeCompare(b.name))
+                  .map((group: any) => ({
+                    ...group,
+                    operationType: ASSIGN_TO.group,
+                  }))
 
-              groupsList = [
-                {
-                  name: 'Atribuir a conversa para um grupo',
-                  id: 'group',
-                  disabled: true,
-                  isTitle: true,
-                },
-                ...groups,
-              ]
+                groupsList = [
+                  {
+                    name: 'Atribuir a conversa para um grupo',
+                    id: 'group',
+                    disabled: true,
+                    isTitle: true,
+                  },
+                  ...groups,
+                ]
 
-              agentsGroupsList.push(...groupsList)
-            })
+                agentsGroupsList.push(...groupsList)
+              })
           : undefined
 
         const promises = [agentPromise, groupPromise]
@@ -611,6 +634,8 @@ export const TypebotContext = ({
     <typebotContext.Provider
       value={{
         typebot: localTypebot,
+        emptyFields,
+        setEmptyFields,
         currentTypebot: typebot,
         publishedTypebot,
         linkedTypebots,
@@ -628,8 +653,14 @@ export const TypebotContext = ({
         restorePublishedTypebot,
         updateOnBothTypebots,
         updateWebhook,
-        ...blocksActions(setLocalTypebot as SetTypebot),
-        ...stepsAction(setLocalTypebot as SetTypebot),
+        ...blocksActions(
+          setLocalTypebot as SetTypebot,
+          setEmptyFields as SetEmptyFields
+        ),
+        ...stepsAction(
+          setLocalTypebot as SetTypebot,
+          setEmptyFields as SetEmptyFields
+        ),
         ...variablesAction(setLocalTypebot as SetTypebot),
         ...edgesAction(setLocalTypebot as SetTypebot),
         ...itemsAction(setLocalTypebot as SetTypebot),
