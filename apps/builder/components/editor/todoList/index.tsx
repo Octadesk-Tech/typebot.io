@@ -23,6 +23,7 @@ import { useTypebot } from 'contexts/TypebotContext'
 import { InputStepType } from 'models'
 import { ErrorIcon } from 'assets/icons'
 import { StepTypeLabel } from '../StepsSideBar/StepTypeLabel'
+import { colors } from 'libs/theme'
 
 export const ToDoList = () => {
   const { typebot, emptyFields } = useTypebot()
@@ -178,8 +179,10 @@ export const ToDoList = () => {
                         background="#F4F4F5"
                       >
                         <Flex alignItems="center" gap="2">
-                          <StepIcon type={InputStepType.ASK_NAME} />
-
+                          <StepIcon
+                            color={colors.orange[300]}
+                            type={item?.step.type}
+                          />
                           <StepTitle>
                             <StepTypeLabel type={item?.step?.type} />
                           </StepTitle>
@@ -227,8 +230,6 @@ export const ToDoList = () => {
                       background="#F4F4F5"
                     >
                       <Flex alignItems="center" gap="2">
-                        <StepIcon type={InputStepType.ASK_NAME} />
-
                         <StepTitle>{item.title}</StepTitle>
                       </Flex>
                     </Flex>
