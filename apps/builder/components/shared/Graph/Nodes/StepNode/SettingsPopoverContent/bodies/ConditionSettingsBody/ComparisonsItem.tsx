@@ -89,11 +89,7 @@ export const ComparisonItem = ({
   }
 
   const handleDeleteClick = () => {
-    console.log(item)
-
     onRemoveItem({ ...item });
-
-
   }
 
   useEffect(() => {
