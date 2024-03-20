@@ -30,8 +30,8 @@ import {
   WhatsAppOptionsListSettingsBody,
   WhatsAppButtonsListSettingsBody,
   WOZSuggestionSettingBody,
-  WOZAssignSettingBody,
-  ConversationTagBody
+  ConversationTagBody,
+  WOZAssignSettingBody
 } from './bodies'
 import { ChoiceInputSettingsBody } from './bodies/ChoiceInputSettingsBody'
 import { CodeSettings } from './bodies/CodeSettings'

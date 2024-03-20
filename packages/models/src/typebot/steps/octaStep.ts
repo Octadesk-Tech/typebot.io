@@ -9,7 +9,13 @@ import {
 import { TextBubbleContent, WOZStepType } from './bubble'
 
 // Regular steps
-export type OctaStep = AssignToTeamStep | OfficeHourStep | CallOtherBotStep | PreReserveStep | CommerceStep | ConversationTagStep
+export type OctaStep =
+  | AssignToTeamStep
+  | OfficeHourStep
+  | CallOtherBotStep
+  | PreReserveStep
+  | CommerceStep
+  | ConversationTagStep
 
 // Waba steps
 
@@ -59,7 +65,7 @@ export enum OctaStepType {
   ASSIGN_TO_TEAM = 'assign to team',
   CALL_OTHER_BOT = 'call other bot',
   PRE_RESERVE = 'pre reserve',
-  CONVERSATION_TAG = 'conversation tag'
+  CONVERSATION_TAG = 'conversation tag',
 }
 
 // Waba step types

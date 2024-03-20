@@ -112,7 +112,7 @@ export const WOZAssignSettingBody = ({ options, onOptionsChange }: Props) => {
             </Text>
             <OctaDivider width='100%' />
             <Text color="gray.400" fontSize="sm" fontWeight="bold">
-              Evita mal entendidos:
+              Evita mal entendido:
             </Text>
             <Text color="gray.400" fontSize="sm">
               Não permite que o cliente seja direcionado para qualquer direção da árvore sem confirmação do próprio.

@@ -19,9 +19,6 @@ export const CommerceService: CommerceServicesType = {
   },
   getProductsInCatalog: async (id: string): Promise<Array<ProductType>> => {
     try {
-      const authStorage = Storage.getItem('auth') as any
-      const accessToken = authStorage.access_token
-
       const { data }: any = await getCommerceClient().then(client =>
         client.get(`/store/products`, {
           params: {

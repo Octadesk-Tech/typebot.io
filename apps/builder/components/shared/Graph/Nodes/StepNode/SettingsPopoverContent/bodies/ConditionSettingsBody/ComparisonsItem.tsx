@@ -13,7 +13,7 @@ export const ComparisonItem = ({
   onItemChange,
   onRemoveItem
 }: TableListItemProps<Comparison>) => {
-  const { typebot } = useTypebot()
+  const { typebot, deleteItem } = useTypebot()
   let myVariable = typebot?.variables?.find((v: Variable) => v.id === item?.variableId)
   let myComparisonOperator = item?.comparisonOperator
 
@@ -88,7 +88,9 @@ export const ComparisonItem = ({
   }
 
   const handleDeleteClick = () => {
+
     onRemoveItem({ ...item });
+
   }
 
   useEffect(() => {
@@ -137,6 +139,7 @@ export const ComparisonItem = ({
             onChange={handleChangeSecondaryValue}
             placeholder="Digite um valor..."
           />
+
         </div>
       )}
       <IconButton
