@@ -17,7 +17,6 @@ export const ComparisonItem = ({
   let myVariable = typebot?.variables?.find((v: Variable) => v.id === item?.variableId)
   let myComparisonOperator = item?.comparisonOperator
 
-
   const [needSecondaryValue, setNeedSecondaryValue] = useState<boolean>(!!item.secondaryValue)
   const [needValue, setNeedValue] = useState<boolean>(true)
 
@@ -89,10 +88,8 @@ export const ComparisonItem = ({
   }
 
   const handleDeleteClick = () => {
-    console.log(item)
 
     onRemoveItem({ ...item });
-
 
   }
 
