@@ -85,14 +85,11 @@ export const StepNode = ({
     setFocusedBlockId,
     previewingEdge,
   } = useGraph()
-
-  const { updateStep, typebot } = useTypebot()
+  const { updateStep, emptyFields, setEmptyFields, typebot } = useTypebot()
   const [isConnecting, setIsConnecting] = useState(false)
 
   const availableOnlyForEvent =
-    typebot?.availableFor?.length == 1 &&
-    typebot.availableFor.includes('event')
-
+    typebot?.availableFor?.length == 1 && typebot.availableFor.includes('event')
 
   const showWarning = !availableOnlyForEvent
 
@@ -240,13 +237,14 @@ export const StepNode = ({
                 w="full"
                 direction="column"
               >
-
                 <Stack spacing={2}>
                   <BlockStack
                     isOpened={isOpened}
                     isPreviewing={isPreviewing}
-                    style={{ borderColor: unreachableNode && showWarning ? '#e3a820' : '' }}
-
+                    style={{
+                      border: 'solid 2px',
+                      borderColor: hasErrorMessage() ? colors.red[400] : '',
+                    }}
                   >
                     <Stack spacing={2} w="full">
                       <HStack fontSize={'14px'}>
@@ -274,9 +272,8 @@ export const StepNode = ({
                             />
                           </>
                         )}
-
-                        {!unreachableNode && showWarning &&
-
+                        {!unreachableNode &&
+                          showWarning &&
                           validationMessages?.map((s, index) => {
                             return (
                               <OctaTooltip
