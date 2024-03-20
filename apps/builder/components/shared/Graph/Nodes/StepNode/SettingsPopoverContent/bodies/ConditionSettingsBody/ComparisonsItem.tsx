@@ -1,3 +1,4 @@
+
 import { Stack, IconButton, Fade } from '@chakra-ui/react'
 import { TrashIcon } from 'assets/icons'
 import { DropdownList } from 'components/shared/DropdownList'
@@ -88,9 +89,7 @@ export const ComparisonItem = ({
   }
 
   const handleDeleteClick = () => {
-
     onRemoveItem({ ...item });
-
   }
 
   useEffect(() => {
