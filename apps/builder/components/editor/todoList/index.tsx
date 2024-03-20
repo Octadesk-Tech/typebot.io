@@ -24,6 +24,7 @@ import { InputStepType } from 'models'
 import { ErrorIcon } from 'assets/icons'
 import { StepTypeLabel } from '../StepsSideBar/StepTypeLabel'
 import { colors } from 'libs/theme'
+import { OctaDivider } from 'components/octaComponents/OctaDivider/OctaDivider'
 
 export const ToDoList = () => {
   const { typebot, emptyFields } = useTypebot()
@@ -192,6 +193,12 @@ export const ToDoList = () => {
                   })}
                 </>
               )}
+
+              {hasGroupsWithoutConnection() &&
+                groupsWithEmptyFields().length > 0 && (
+                  <OctaDivider width="100%" />
+                )}
+
               {hasGroupsWithoutConnection() && (
                 <>
                   <Flex
