@@ -80,6 +80,11 @@ export const getValidationMessages = (step: Step): Array<ValidationMessage> => {
       data.push({
         message: step?.options?.body?.content?.plainText,
       })
+      if (OctaWabaStepType.WHATSAPP_OPTIONS_LIST === step.type) {
+        data.push({
+          message: step?.options?.listTitle?.content?.plainText,
+        })
+      }
     }
 
     if (OctaStepType.ASSIGN_TO_TEAM === step.type) {
