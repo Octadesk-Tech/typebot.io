@@ -328,7 +328,7 @@ export const StepNode = ({
                   </BlockStack>
 
                   {step.type === 'assign to team' &&
-                    hasStepRedirectNoneAvailable(step) && (
+                    hasStepRedirectCheckAvailability(step) && (
                       <HStack
                         flex="1"
                         userSelect="none"
@@ -435,9 +435,9 @@ const isWhatsAppButtonsListStep = (
   return step.type === OctaWabaStepType.WHATSAPP_BUTTONS_LIST
 }
 
-const hasStepRedirectNoneAvailable = (step: Step): step is AssignToTeamStep => {
+const hasStepRedirectCheckAvailability = (step: Step): step is AssignToTeamStep => {
   if (step.type === 'assign to team') {
-    return step.options.shouldRedirectNoneAvailable
+    return step.options.isAvailable
   }
 
   return true
