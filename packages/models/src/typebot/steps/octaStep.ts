@@ -15,7 +15,7 @@ export type OctaStep = AssignToTeamStep | OfficeHourStep | CallOtherBotStep | Pr
 
 export type OctaWabaStep = WhatsAppOptionsListStep | WhatsAppButtonsListStep
 
-export type WOZStep = WOZSuggestionStep
+export type WOZStep = WOZSuggestionStep | WOZAssignStep
 
 // Bubble steps (editado na árvore)
 export type OctaBubbleStep = EndConversationStep
@@ -87,6 +87,12 @@ export type AssignToTeamStep = StepBase & {
 export type WOZSuggestionStep = StepBase & {
   type: WOZStepType.MESSAGE
   options: WOZSuggestionOptions
+}
+
+export type WOZAssignStep = StepBase & {
+  type: WOZStepType.ASSIGN
+  options: WOZAssignOptions
+  items: []
 }
 
 export type ConversationTagStep = StepBase & {
@@ -219,7 +225,6 @@ export type AssignToTeamOptions = BaseOctaOptions & {
   }
   defaultArray: string
   isAvailable: boolean
-  shouldRedirectNoneAvailable: boolean
   labels: {
     placeholder: { assignToTeam: string; connectionMessage: string }
     button: string
@@ -240,6 +245,12 @@ export type ConversationTagOptions = {
 
 export type WOZSuggestionOptions = BaseOctaOptions & {
   preferredAnswer?: string
+}
+
+export type WOZAssignOptions = BaseOctaOptions & {
+  virtualAgentId?: string
+  introduceAsIA: boolean
+  confirmContext: boolean
 }
 
 export type CallOtherBotOptions = BaseOctaOptions & {
@@ -358,7 +369,6 @@ export const defaultAssignToTeamOptions: AssignToTeamOptions = {
       connectionMessage: 'Mensagem de conexão',
     },
   },
-  shouldRedirectNoneAvailable: false,
   messages: {
     firstMessage: {
       content: undefined,
@@ -397,6 +407,14 @@ export const defaultWOZSuggestionOptions: WOZSuggestionOptions = {
   preferredAnswer: '',
   name: '',
   subject: '',
+}
+
+export const defaultWOZAssignOptions: WOZAssignOptions = {
+  name: '',
+  subject: '',
+  virtualAgentId: undefined,
+  introduceAsIA: true,
+  confirmContext: false
 }
 
 export const defaultCallOtherBotOptions: CallOtherBotOptions = {

@@ -24,6 +24,8 @@ import {
   WhatsAppOptionsListStep,
   WhatsAppButtonsListStep,
   OctaWabaStepType,
+  WOZAssignStep,
+  WOZStepType,
 } from 'models'
 import { useGraph } from 'contexts/GraphContext'
 import { StepIcon } from 'components/editor/StepsSideBar/StepIcon'
@@ -83,8 +85,13 @@ export const StepNode = ({
     setFocusedBlockId,
     previewingEdge,
   } = useGraph()
-  const { updateStep, emptyFields, setEmptyFields } = useTypebot()
+  const { updateStep, emptyFields, setEmptyFields, typebot } = useTypebot()
   const [isConnecting, setIsConnecting] = useState(false)
+
+  const availableOnlyForEvent =
+    typebot?.availableFor?.length == 1 && typebot.availableFor.includes('event')
+
+  const showWarning = !availableOnlyForEvent
 
   const [isPopoverOpened, setIsPopoverOpened] = useState(
     openedStepId === step.id
@@ -198,7 +205,8 @@ export const StepNode = ({
       !isWebhookStep(step) &&
       !isCallOtherBotStep(step) &&
       !isWhatsAppOptionsListStep(step) &&
-      !isWhatsAppButtonsListStep(step)
+      !isWhatsAppButtonsListStep(step) &&
+      !isWozAssignStep(step)
     )
   }
 
@@ -250,7 +258,7 @@ export const StepNode = ({
                           data-testid={`${step.id}-icon`}
                         />
                         <Spacer />
-                        {unreachableNode && (
+                        {unreachableNode && showWarning && (
                           <>
                             <OctaTooltip
                               element={<WarningIcon color={'#FAC300'} />}
@@ -265,6 +273,7 @@ export const StepNode = ({
                           </>
                         )}
                         {!unreachableNode &&
+                          showWarning &&
                           validationMessages?.map((s, index) => {
                             return (
                               <OctaTooltip
@@ -319,7 +328,7 @@ export const StepNode = ({
                   </BlockStack>
 
                   {step.type === 'assign to team' &&
-                    hasStepRedirectNoneAvailable(step) && (
+                    hasStepRedirectCheckAvailability(step) && (
                       <HStack
                         flex="1"
                         userSelect="none"
@@ -398,6 +407,10 @@ const isAssignToTeamStep = (step: Step): step is AssignToTeamStep => {
   return step.type === OctaStepType.ASSIGN_TO_TEAM
 }
 
+const isWozAssignStep = (step: Step): step is WOZAssignStep => {
+  return step.type === WOZStepType.ASSIGN
+}
+
 const isCallOtherBotStep = (step: Step): step is CallOtherBotStep => {
   return step.type === OctaStepType.CALL_OTHER_BOT
 }
@@ -422,9 +435,11 @@ const isWhatsAppButtonsListStep = (
   return step.type === OctaWabaStepType.WHATSAPP_BUTTONS_LIST
 }
 
-const hasStepRedirectNoneAvailable = (step: Step): step is AssignToTeamStep => {
+const hasStepRedirectCheckAvailability = (
+  step: Step
+): step is AssignToTeamStep => {
   if (step.type === 'assign to team') {
-    return step.options.shouldRedirectNoneAvailable
+    return step.options.isAvailable
   }
 
   return true
