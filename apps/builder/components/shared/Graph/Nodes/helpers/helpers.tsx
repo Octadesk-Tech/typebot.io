@@ -36,7 +36,6 @@ const inpuStepsWithFallbackMessages = [InputStepType.EMAIL, InputStepType.PHONE]
 
 export const getValidationMessages = (step: Step): Array<ValidationMessage> => {
   try {
-    console.log('step', step)
     const data = []
 
     if (isInputStep(step) || OctaWabaStepType.COMMERCE === step.type) {

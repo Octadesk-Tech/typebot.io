@@ -31,7 +31,8 @@ const areAllItemsConnected = (block: Block): boolean => {
       step.type === IntegrationStepType.WEBHOOK ||
       step.type === OctaStepType.OFFICE_HOURS ||
       step.type === OctaWabaStepType.WHATSAPP_OPTIONS_LIST ||
-      step.type === OctaWabaStepType.WHATSAPP_BUTTONS_LIST
+      step.type === OctaWabaStepType.WHATSAPP_BUTTONS_LIST ||
+      step.type === WOZStepType.ASSIGN
 
     if (checkStepType) {
       const areAllChoicesConnected =
@@ -53,6 +54,18 @@ const hasAllEdgeCaseTrue = (block: Block): boolean => {
         step.items?.every((item) => !!item.outgoingEdgeId) ?? false
       if (!hasEdgeCaseTrue || !hasEdgeCaseFalse) {
         result = false
+      }
+    }
+  })
+  return result
+}
+
+const checkOutgoingEdgeOnAssignToTeam = (block: Block): boolean => {
+  let result = true
+  block.steps.forEach((step) => {
+    if (step.type === OctaStepType.ASSIGN_TO_TEAM) {
+      if (step.options?.isAvailable) {
+        result = !!step.outgoingEdgeId
       }
     }
   })
@@ -94,7 +107,8 @@ export const updateBlocksHasConnections = ({
       blockTypes.includes(IntegrationStepType.WEBHOOK) ||
       blockTypes.includes(OctaStepType.OFFICE_HOURS) ||
       blockTypes.includes(OctaWabaStepType.WHATSAPP_OPTIONS_LIST) ||
-      blockTypes.includes(OctaWabaStepType.WHATSAPP_BUTTONS_LIST)
+      blockTypes.includes(OctaWabaStepType.WHATSAPP_BUTTONS_LIST) ||
+      blockTypes.includes(WOZStepType.ASSIGN)
 
     if (hasToConnectEachItem) {
       block.hasConnection = areAllItemsConnected(block)
@@ -102,6 +116,12 @@ export const updateBlocksHasConnections = ({
 
     if (blockTypes.includes(LogicStepType.CONDITION)) {
       block.hasConnection = hasAllEdgeCaseTrue(block)
+    }
+
+    if (blockTypes.includes(OctaStepType.ASSIGN_TO_TEAM)) {
+      block.hasConnection =
+        checkOutgoingEdgeOnAssignToTeam(block) &&
+        validIfHasConnection(block.id, 'to', edges)
     }
 
     return block
