@@ -33,18 +33,12 @@ const itemsAction = (setTypebot: SetTypebot): ItemsActions => ({
       produce(typebot, (typebot) => {
         const step = typebot.blocks[blockIndex].steps[stepIndex]
         if (
-<<<<<<< HEAD
           step.type !== InputStepType.CHOICE &&
           step.type !== OctaWabaStepType.WHATSAPP_OPTIONS_LIST &&
-          step.type !== OctaWabaStepType.WHATSAPP_BUTTONS_LIST
+          step.type !== OctaWabaStepType.WHATSAPP_BUTTONS_LIST &&
+          step.type !== WOZStepType.ASSIGN
         )
           return
-=======
-          step.type !== InputStepType.CHOICE && 
-          step.type !== OctaWabaStepType.WHATSAPP_OPTIONS_LIST && 
-          step.type !== OctaWabaStepType.WHATSAPP_BUTTONS_LIST &&
-          step.type !== WOZStepType.ASSIGN) return
->>>>>>> main
         const newItem = {
           ...item,
           stepId: step.id,
