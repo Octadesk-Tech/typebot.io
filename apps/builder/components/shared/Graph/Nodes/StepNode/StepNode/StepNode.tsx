@@ -435,7 +435,9 @@ const isWhatsAppButtonsListStep = (
   return step.type === OctaWabaStepType.WHATSAPP_BUTTONS_LIST
 }
 
-const hasStepRedirectCheckAvailability = (step: Step): step is AssignToTeamStep => {
+const hasStepRedirectCheckAvailability = (
+  step: Step
+): step is AssignToTeamStep => {
   if (step.type === 'assign to team') {
     return step.options.isAvailable
   }
