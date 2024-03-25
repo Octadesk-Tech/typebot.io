@@ -161,7 +161,7 @@ export const ToDoList = () => {
 
                     <Tooltip
                       hasArrow
-                      label="Um ou mais campos obrigatórios do seu bot não foram preenchidos."
+                      label="Uma ou mais etapas do seu bot estão com campos obrigatórios não preenchidos."
                       bg="gray.700"
                       color="white"
                       width="232px"
