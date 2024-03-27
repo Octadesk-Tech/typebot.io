@@ -1,4 +1,4 @@
-import { services } from '@octadesk-tech/services'
+import { headers, services } from '@octadesk-tech/services'
 import Storage from '@octadesk-tech/storage'
 import { FileUploaderService } from './type.fileUploader'
 
@@ -9,12 +9,7 @@ export const fileUploader = async (): Promise<FileUploaderService> => {
       if (file) {
         const formData = new FormData()
         formData.append('file', file)
-        return client.post('/upload', formData, {
-          headers: {
-            AppSubDomain: Storage.getItem('company'),
-            'X-Requested-With': null,
-          },
-        })
+        return client.post('/upload', formData, headers.getAuthorizedHeaders())
       }
     },
   }

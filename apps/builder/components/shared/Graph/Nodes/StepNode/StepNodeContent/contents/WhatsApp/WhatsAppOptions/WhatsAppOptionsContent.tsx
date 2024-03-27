@@ -26,15 +26,9 @@ const WhatsAppOptionsContent = ({ step, indices }: Props) => {
         fontSize="xl"
         renderIfEmpty={false}
       />
-
-      {/* Campo obrigatório body */}
       <TextHtmlContent html={step.options?.body?.content?.html} />
-
-      {/* Campo obrigatório listTitle */}
       <TextHtmlContent html={step?.options?.listTitle?.content?.html} />
-
       <ItemNodesList step={step} indices={indices} />
-
       <TextHtmlContent
         html={step?.options?.footer?.content?.html}
         renderIfEmpty={false}

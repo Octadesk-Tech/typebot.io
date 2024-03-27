@@ -185,30 +185,38 @@ export const StepsSideBar = () => {
   const validationSteps = Object.values(LogicStepType).filter((step) =>
     shouldShowComponent(step)
   )
+
   const inputSteps = Object.values(InputStepType).filter((step) =>
     shouldShowComponent(step)
   )
+
   const octaWabaSteps = Object.values(OctaWabaStepType).filter(
     (s) => !wabaMessageComponent().includes(s) && shouldShowComponent(s)
   )
+
   const bubbleSteps = Object.values(BubbleStepType).filter((step) =>
     shouldShowComponent(step)
   )
+
   const wabaMessageSteps = wabaMessageComponent().filter(
     (step) =>
       shouldShowComponent(step) &&
       workspace?.channel === 'whatsapp' &&
       verifyFeatureToggle('commerce-enabled')
   )
+
   const wozSteps = Object.values(WOZStepType).filter(
     (step) => shouldShowComponent(step) && verifyFeatureToggle('chat-ai')
   )
+
   const octaBubbleSteps = Object.values(OctaBubbleStepType).filter((step) =>
     shouldShowComponent(step)
   )
+
   const octaSteps = Object.values(OctaStepType).filter((step) =>
     shouldShowComponent(step)
   )
+
   const integrationSteps = Object.values(IntegrationStepType).filter((step) =>
     shouldShowComponent(step)
   )
