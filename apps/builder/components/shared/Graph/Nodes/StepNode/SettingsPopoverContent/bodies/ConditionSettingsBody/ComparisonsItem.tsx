@@ -1,4 +1,5 @@
-import { Stack } from '@chakra-ui/react'
+import { Stack, IconButton, Fade } from '@chakra-ui/react'
+import { TrashIcon } from 'assets/icons'
 import { DropdownList } from 'components/shared/DropdownList'
 import { Input } from 'components/shared/Textbox/Input'
 import { TableListItemProps } from 'components/shared/TableList'
@@ -7,14 +8,16 @@ import { Comparison, Variable, ComparisonOperators } from 'models'
 import { useTypebot } from 'contexts/TypebotContext'
 import { useEffect, useState } from 'react'
 
+
 export const ComparisonItem = ({
   item,
   onItemChange,
+  onRemoveItem
 }: TableListItemProps<Comparison>) => {
   const { typebot } = useTypebot()
   let myVariable = typebot?.variables?.find((v: Variable) => v.id === item?.variableId)
   let myComparisonOperator = item?.comparisonOperator
-  
+
   const [needSecondaryValue, setNeedSecondaryValue] = useState<boolean>(!!item.secondaryValue)
   const [needValue, setNeedValue] = useState<boolean>(true)
 
@@ -55,8 +58,8 @@ export const ComparisonItem = ({
     const allTypesArray = [
       ComparisonOperators.EQUAL,
       ComparisonOperators.NOT_EQUAL,
-      ComparisonOperators.EMPTY,  
-      ComparisonOperators.NOT_EMPTY 
+      ComparisonOperators.EMPTY,
+      ComparisonOperators.NOT_EMPTY
     ]
 
     const stringArray = [
@@ -79,18 +82,22 @@ export const ComparisonItem = ({
 
     if (!myVariable || (myVariable?.type || '') === '') return allTypesArray
 
-    if (['string', 'order'].includes(myVariable.type || '')) return [...allTypesArray, ...stringArray]
+    if (['string', 'text', 'order'].includes(myVariable.type || '')) return [...allTypesArray, ...stringArray]
     if (['float', 'number', 'date'].includes(myVariable.type || '')) return [...allTypesArray, ...numberArray]
 
     return allTypesArray
   }
 
+  const handleDeleteClick = () => {
+    onRemoveItem({ ...item });
+  }
+
   useEffect(() => {
-      const index = Object.keys(ComparisonOperators).indexOf(myComparisonOperator  || ComparisonOperators.EQUAL)
-      const myValue = Object.values(ComparisonOperators)[index]
-      setNeedSecondaryValue([ComparisonOperators.BETWEEN, ComparisonOperators.NOT_BETWEEN].includes(myValue))
-      setNeedValue(![ComparisonOperators.EMPTY, ComparisonOperators.NOT_EMPTY].includes(myValue))
-    }, [myComparisonOperator]
+    const index = Object.keys(ComparisonOperators).indexOf(myComparisonOperator || ComparisonOperators.EQUAL)
+    const myValue = Object.values(ComparisonOperators)[index]
+    setNeedSecondaryValue([ComparisonOperators.BETWEEN, ComparisonOperators.NOT_BETWEEN].includes(myValue))
+    setNeedValue(![ComparisonOperators.EMPTY, ComparisonOperators.NOT_EMPTY].includes(myValue))
+  }, [myComparisonOperator]
   )
 
   useEffect(() => {
@@ -103,7 +110,7 @@ export const ComparisonItem = ({
     onItemChange({ ...item, secondaryValue: undefined })
   }, [needSecondaryValue])
 
-    return (
+  return (
     <Stack p="4" rounded="md" flex="1" borderWidth="1px">
       <VariableSearchInput
         initialVariableId={item.variableId}
@@ -132,7 +139,15 @@ export const ComparisonItem = ({
             placeholder="Digite um valor..."
           />
         </div>
-        )}
+      )}
+      <IconButton
+        aria-label="Delete item"
+        icon={<TrashIcon />}
+        size="xs"
+        shadow="md"
+        colorScheme="gray"
+        onClick={handleDeleteClick}
+      />
     </Stack>
   )
 }
