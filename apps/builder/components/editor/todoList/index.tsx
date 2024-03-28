@@ -22,6 +22,7 @@ import { ErrorIcon } from 'assets/icons'
 import { OctaDivider } from 'components/octaComponents/OctaDivider/OctaDivider'
 import EmptyFieldsItem from './emptyFieldsItem'
 import GroupsWithoutConnectionItem from './groupsWithoutConectionItem'
+import { colors } from 'libs/theme'
 
 export const ToDoList = () => {
   const { typebot, emptyFields } = useTypebot()
@@ -137,7 +138,28 @@ export const ToDoList = () => {
             </Text>
           </Stack>
         ) : (
-          <Flex w="full" flexDirection="column" gap="5">
+          <Flex
+            w="full"
+            flexDirection="column"
+            gap="5"
+            overflow={'auto'}
+            padding={'0 10px'}
+            style={{
+              WebkitOverflowScrolling: 'touch',
+            }}
+            css={{
+              '&::-webkit-scrollbar': {
+                width: '5px',
+              },
+              '&::-webkit-scrollbar-track': {
+                width: '6px',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                background: colors.gray[300],
+                borderRadius: '24px',
+              },
+            }}
+          >
             <Flex w="full" flexDirection="column" gap="2.5">
               {groupsWithEmptyFields().length > 0 && (
                 <>
