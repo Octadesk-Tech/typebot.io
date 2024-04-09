@@ -267,7 +267,7 @@ export const OfficeHoursBody = ({ options, onOptionsChange }: Props) => {
         reset()
       }
     }
-  }, [reset, screen])
+  }, [screen])
 
   useEffect(() => {
     const getTimezones = async () => {
@@ -478,7 +478,7 @@ export const OfficeHoursBody = ({ options, onOptionsChange }: Props) => {
         </Container>
       )}
       {screen === 'CREATE-OFFICE-HOURS' && (
-        <form onSubmit={handleSubmit((values) => saveOfficeHour())}>
+        <form onSubmit={(e) => event?.preventDefault()}>
           <ContainerCreate>
             <Title>Novo horário de expediente</Title>
             <Description>
@@ -634,7 +634,11 @@ export const OfficeHoursBody = ({ options, onOptionsChange }: Props) => {
               />
             )}
             <FormArea>
-              <ButtonCreate>Salvar</ButtonCreate>
+              <ButtonCreate
+                onClick={handleSubmit((values) => saveOfficeHour())}
+              >
+                Salvar
+              </ButtonCreate>
               <ButtonCancel onClick={cancelCreate}>Cancelar</ButtonCancel>
             </FormArea>
           </ContainerCreate>
