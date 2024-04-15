@@ -14,6 +14,7 @@ import {
   IntegrationStepType,
   OctaBubbleStepType,
   OctaStepType,
+  OctaWabaStepType,
   Step,
   StepType,
   WOZStepType,
@@ -120,7 +121,9 @@ export const StepNodesList = ({
         s.type === InputStepType.CHOICE ||
         s.type === OctaStepType.OFFICE_HOURS ||
         s.type === WOZStepType.ASSIGN ||
-        s.type === IntegrationStepType.WEBHOOK
+        s.type === IntegrationStepType.WEBHOOK ||
+        s.type === OctaWabaStepType.WHATSAPP_OPTIONS_LIST ||
+        s.type === OctaWabaStepType.WHATSAPP_BUTTONS_LIST
     )
     setHasBlockEndedIndex(endedIndex)
   }, [steps])
