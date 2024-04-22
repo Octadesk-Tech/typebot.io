@@ -176,7 +176,7 @@ export type OfficeHoursContent = {
   subType: null
 }
 
-const emptyDefaultFallback = (msg: string) => {
+const generateFallback = (msg: string) => {
   const obj = {
     html: `<div style="margin-left: 8px;">${msg}</div>`,
     richText: [
@@ -556,7 +556,7 @@ export const defaultWhatsAppOptionsListOptions: WhatsAppOptionsListOptions = {
     type: '',
   },
   useFallback: true,
-  fallbackMessages: emptyDefaultFallback(
+  fallbackMessages: generateFallback(
     'Opção inválida. Escolha uma das opções disponíveis'
   ),
   variableId: '',
@@ -583,7 +583,7 @@ export const defaultWhatsAppButtonsListOptions: WhatsAppButtonsListOptions = {
     type: '',
   },
   useFallback: true,
-  fallbackMessages: emptyDefaultFallback(
+  fallbackMessages: generateFallback(
     'Opção inválida. Escolha uma das opções disponíveis'
   ),
   variableId: '',

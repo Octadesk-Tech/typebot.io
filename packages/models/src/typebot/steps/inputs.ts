@@ -180,7 +180,7 @@ export type PaymentInputOptions = OptionBase & {
   labels: { button: string }
 }
 
-const emptyDefaultFallback = (msg: string) => {
+const generateFallback = (msg: string) => {
   const obj = {
     html: `<div style="margin-left: 8px;">${msg}</div>`,
     richText: [
@@ -247,7 +247,7 @@ export const defaultEmailInputOptions: InputOptions = {
     plainText: 'Pode me informar o seu email?',
   },
   useFallback: true,
-  fallbackMessages: emptyDefaultFallback(
+  fallbackMessages: generateFallback(
     'Esse email não parece ser válido. Você pode digitar novamente?'
   ),
   initialVariableToken: '#email-contato',
@@ -311,7 +311,7 @@ export const defaultPhoneInputOptions: InputOptions = {
     plainText: 'Pode me informar o seu celular?',
   },
   useFallback: true,
-  fallbackMessages: emptyDefaultFallback(
+  fallbackMessages: generateFallback(
     'Esse número de celular não parece ser válido. Você pode digitar novamente?'
   ),
   initialVariableToken: '#tel-celular-contato',
@@ -322,7 +322,7 @@ export const defaultPhoneInputOptions: InputOptions = {
 export const defaultChoiceInputOptions: ChoiceInputOptions = {
   message: undefined,
   useFallback: true,
-  fallbackMessages: emptyDefaultFallback(
+  fallbackMessages: generateFallback(
     'Essa opção não é válida. Escolha uma das opções disponíveis.'
   ),
   initialVariableToken: '',
