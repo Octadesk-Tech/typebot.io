@@ -182,20 +182,20 @@ export const TypebotContext = ({
   })
 
   useEffect(() => {
-    // if (!typebot || !currentTypebotRef.current) return
-    // const parsedTypebot = {
-    //   ...typebot,
-    //   blocks: updateBlocksHasConnections(typebot),
-    // }
-    // if (typebotId !== currentTypebotRef.current.id) {
-    //   setLocalTypebot({ ...parsedTypebot }, { updateDate: false })
-    //   flush()
-    // } else if (
-    //   new Date(typebot.updatedAt) >
-    //   new Date(currentTypebotRef.current.updatedAt)
-    // ) {
-    //   setLocalTypebot({ ...parsedTypebot })
-    // }
+    if (!typebot || !currentTypebotRef.current) return
+    const parsedTypebot = {
+      ...typebot,
+      blocks: updateBlocksHasConnections(typebot),
+    }
+    if (typebotId !== currentTypebotRef.current.id) {
+      setLocalTypebot({ ...parsedTypebot }, { updateDate: false })
+      flush()
+    } else if (
+      new Date(typebot.updatedAt) >
+      new Date(currentTypebotRef.current.updatedAt)
+    ) {
+      setLocalTypebot({ ...parsedTypebot })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [typebot])
 
@@ -631,7 +631,7 @@ export const TypebotContext = ({
       typebot: localTypebot,
       emptyFields,
       setEmptyFields,
-      currentTypebot: localTypebot,
+      currentTypebot: typebot,
       publishedTypebot,
       linkedTypebots,
       isReadOnly,
