@@ -289,6 +289,7 @@ export const Graph = ({
           transformOrigin="0px 0px 0px"
         >
           <GraphContent
+            graphContainerRef={graphContainerRef}
             answersCounts={answersCounts}
             onUnlockProPlanClick={onUnlockProPlanClick}
           />
