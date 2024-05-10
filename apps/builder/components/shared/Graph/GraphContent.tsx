@@ -32,6 +32,7 @@ const MyComponent = ({
     <>
       <Edges
         edges={typebot?.edges ?? []}
+        blocks={typebot?.blocks ?? []}
         answersCounts={answersCounts}
         onUnlockProPlanClick={onUnlockProPlanClick}
       />
