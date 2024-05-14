@@ -1,10 +1,11 @@
 import { useTypebot } from 'contexts/TypebotContext'
-import React, { memo, useMemo } from 'react'
+import React, { memo, useEffect, useMemo, useState } from 'react'
 import { AnswersCount } from 'services/analytics'
 import { Edges } from './Edges'
 import { BlockNode } from './Nodes/BlockNode'
 import { useGraph } from 'contexts/GraphContext'
 import { isItemVisible } from 'services/graph'
+import { Block } from 'models'
 
 type Props = {
   answersCounts?: AnswersCount[]
@@ -13,8 +14,17 @@ type Props = {
 }
 const MyComponent = memo(
   ({ answersCounts, onUnlockProPlanClick, graphContainerRef }: Props) => {
-    const { typebot, hideEdges } = useTypebot()
+    const { typebot, hideEdges, emptyFields } = useTypebot()
+    console.log(emptyFields)
     const { graphPosition } = useGraph()
+    const [isVirtualizationEnabled, setIsVirtualizationEnabled] =
+      useState(false)
+
+    useEffect(() => {
+      setTimeout(() => {
+        setIsVirtualizationEnabled(true)
+      }, 1000)
+    }, [])
 
     const visibleItems = useMemo(
       () =>
@@ -41,16 +51,26 @@ const MyComponent = memo(
           />
         )}
 
-        {visibleItems?.map((block) => {
-          const blockIndex = typebot?.blocks.findIndex((b) => b.id === block.id)
-          return (
-            <BlockNode
-              block={block}
-              blockIndex={blockIndex ?? 0}
-              key={block.id}
-            />
-          )
-        })}
+        {isVirtualizationEnabled
+          ? visibleItems?.map((block) => {
+              const blockIndex = typebot?.blocks.findIndex(
+                (b) => b.id === block.id
+              )
+              return (
+                <BlockNode
+                  block={block}
+                  blockIndex={blockIndex ?? 0}
+                  key={block.id}
+                />
+              )
+            })
+          : typebot?.blocks.map((block, idx) => (
+              <BlockNode
+                block={block as Block}
+                blockIndex={idx}
+                key={block.id}
+              />
+            ))}
         {/* 
         {typebot?.blocks.map((block, idx) => (
           <BlockNode block={block as Block} blockIndex={idx} key={block.id} />
