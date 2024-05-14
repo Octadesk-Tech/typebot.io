@@ -1,8 +1,19 @@
-import { Flex, FormLabel, Spacer, Stack } from '@chakra-ui/react'
-import { Variable, WhatsAppButtonsListOptions } from 'models'
+import {
+  Box,
+  Button,
+  Collapse,
+  Flex,
+  FormLabel,
+  Spacer,
+  Stack,
+  Text,
+} from '@chakra-ui/react'
+import { TextBubbleContent, Variable, WhatsAppButtonsListOptions } from 'models'
 import React, { useState } from 'react'
 import { TextBubbleEditor } from 'components/shared/Graph/Nodes/StepNode/TextBubbleEditor'
 import { VariableSearchInput } from 'components/shared/VariableSearchInput/VariableSearchInput'
+import { SlArrowDown, SlArrowUp } from 'react-icons/sl'
+import { AssignToResponsibleSelect } from '../../AssignToTeam/AssignToResponsibleSelect'
 
 type WhatsAppButtonsListSettingsBodyProps = {
   options: WhatsAppButtonsListOptions
@@ -13,6 +24,7 @@ export const WhatsAppButtonsListSettingsBody = ({
   options,
   onOptionsChange,
 }: WhatsAppButtonsListSettingsBodyProps) => {
+  const [isCollapsed, setIsCollapsed] = useState(false)
   const [value, setValue] = useState({
     header: '',
     body: '',
@@ -75,6 +87,50 @@ export const WhatsAppButtonsListSettingsBody = ({
     })
   }
 
+  const handleFallBackMessage = (content: TextBubbleContent, index: number) => {
+    if (!options) return
+    if (!options?.fallbackMessages) options.fallbackMessages = []
+
+    if (options.fallbackMessages.length > index)
+      options.fallbackMessages[index] = content
+    else options.fallbackMessages.push(content)
+
+    onOptionsChange({
+      ...options,
+    })
+  }
+
+  const fallbackMessageComponent = (
+    message: TextBubbleContent,
+    index: string
+  ) => {
+    return (
+      <Box>
+        <FormLabel mb="0" htmlFor="placeholder">
+          Mensagem para resposta inválida - Tentativa {index + 1}
+        </FormLabel>
+        <TextBubbleEditor
+          required={{
+            errorMsg: `O campo "Mensagem para resposta inválida - Tentativa ${
+              index + 1
+            }" é obrigatório`,
+          }}
+          onClose={(content) => handleFallBackMessage(content, index)}
+          initialValue={message ? message.richText : []}
+          onKeyUp={(content) => handleFallBackMessage(content, index)}
+          maxLength={MAX_LENGHT_BODY}
+        />
+      </Box>
+    )
+  }
+
+  const onAssign = (v: any) => {
+    onOptionsChange({
+      ...options,
+      ...v,
+    })
+  }
+
   return (
     <Stack spacing={4}>
       <Stack>
@@ -117,6 +173,43 @@ export const WhatsAppButtonsListSettingsBody = ({
           maxLength={MAX_LENGHT_BODY}
         />
       </Stack>
+      {options?.useFallback &&
+        (options?.fallbackMessages?.length ? (
+          <>
+            <Flex justifyContent={'space-between'} alignItems={'center'}>
+              <Text>Se o cliente não responder com nenhuma das opções:</Text>
+              <Button
+                background={'transparent'}
+                onClick={() => setIsCollapsed((v) => !v)}
+              >
+                {isCollapsed ? <SlArrowDown /> : <SlArrowUp />}
+              </Button>
+            </Flex>
+            <Collapse in={isCollapsed}>
+              <Flex direction={'column'} gap={4}>
+                {options?.fallbackMessages.map((message, index) =>
+                  fallbackMessageComponent(message, index)
+                )}
+                <Box>
+                  <FormLabel mb="0" htmlFor="placeholder">
+                    Se o cliente errar 3 vezes seguidas, atribuir conversa para:
+                  </FormLabel>
+                  <AssignToResponsibleSelect
+                    hasResponsibleContact={false}
+                    options={options}
+                    onSelect={onAssign}
+                  />
+                </Box>
+              </Flex>
+            </Collapse>
+          </>
+        ) : (
+          <TextBubbleEditor
+            onClose={(content) => handleFallBackMessage(content, 0)}
+            initialValue={[]}
+            onKeyUp={(content) => handleFallBackMessage(content, 0)}
+          />
+        ))}
       <Stack>
         <Flex>
           <FormLabel mb="0" htmlFor="button">
