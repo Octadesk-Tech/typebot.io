@@ -14,8 +14,7 @@ type Props = {
 }
 const MyComponent = memo(
   ({ answersCounts, onUnlockProPlanClick, graphContainerRef }: Props) => {
-    const { typebot, hideEdges, emptyFields } = useTypebot()
-    console.log(emptyFields)
+    const { typebot, hideEdges } = useTypebot()
     const { graphPosition } = useGraph()
     const [isVirtualizationEnabled, setIsVirtualizationEnabled] =
       useState(false)
@@ -71,10 +70,6 @@ const MyComponent = memo(
                 key={block.id}
               />
             ))}
-        {/* 
-        {typebot?.blocks.map((block, idx) => (
-          <BlockNode block={block as Block} blockIndex={idx} key={block.id} />
-        ))} */}
       </>
     )
   }
