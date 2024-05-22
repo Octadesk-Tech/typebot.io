@@ -25,6 +25,7 @@ import GraphContent from './GraphContent'
 import cuid from 'cuid'
 import { headerHeight } from '../TypebotHeader'
 import { ZoomButtons } from './ZoomButtons'
+import { colors } from 'libs/theme'
 
 const maxScale = 1.5
 const minScale = 0.1
@@ -307,7 +308,13 @@ export const Graph = memo(
             >
               <IconButton
                 display={['none', 'flex']}
-                icon={!hideEdges ? <TbRoute /> : <TbRouteOff />}
+                icon={
+                  !hideEdges ? (
+                    <TbRoute />
+                  ) : (
+                    <TbRouteOff color={colors.red[400]} />
+                  )
+                }
                 size="sm"
                 aria-label={
                   hideEdges ? 'Mostrar conexões' : 'Esconder conexões'
