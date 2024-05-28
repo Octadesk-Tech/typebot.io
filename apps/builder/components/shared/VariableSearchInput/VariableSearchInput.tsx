@@ -41,6 +41,7 @@ type Props = {
   labelDefault?: string
   isSaveContext?: boolean
   isApi?: boolean
+  menuPosition?: 'absolute' | 'fixed'
   variablesSelectorIsOpen?: boolean | undefined
   handleOutsideClick?: () => void
   onSelectVariable: (
@@ -71,6 +72,7 @@ export const VariableSearchInput = ({
   isSaveContext = true,
   isApi = false,
   variablesSelectorIsOpen = false,
+  menuPosition = 'fixed',
   ...inputProps
 }: Props) => {
   const { onOpen, onClose } = useDisclosure()
@@ -291,7 +293,7 @@ export const VariableSearchInput = ({
                 option.variableId || option.id
               }
               menuPlacement="auto"
-              menuPosition="fixed"
+              menuPosition={menuPosition}
             />
           </div>
         </Container>
