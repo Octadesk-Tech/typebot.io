@@ -119,7 +119,7 @@ const OctaSelect = (props: OctaSelectProps) => {
     if (props.defaultSelected) {
       const newSelected =
         allOptions?.find(
-          (s) => (s.value?.id || s.value) === props.defaultSelected
+          (s) => (s?.value?.id || s?.value) === props.defaultSelected
         ) || props.defaultSelected
       setSelected(newSelected)
     } else {
@@ -168,9 +168,9 @@ const OctaSelect = (props: OctaSelectProps) => {
     if (!allOptions) {
       return []
     }
-    return allOptions.filter((option) => {
+    return allOptions?.filter((option) => {
       return (
-        option.label
+        option?.label
           .toLocaleLowerCase()
           .indexOf(search ? search.toLocaleLowerCase() : '') >= 0
       )
