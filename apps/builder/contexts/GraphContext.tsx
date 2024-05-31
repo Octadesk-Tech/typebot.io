@@ -7,6 +7,7 @@ import {
   SetStateAction,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react'
 
@@ -135,28 +136,48 @@ export const GraphProvider = ({
       [blockId]: newCoord,
     }))
 
+  const contextValue = useMemo(
+    () => ({
+      graphPosition,
+      setGraphPosition,
+      connectingIds,
+      setConnectingIds,
+      previewingEdge,
+      setPreviewingEdge,
+      sourceEndpoints,
+      targetEndpoints,
+      addSourceEndpoint,
+      addTargetEndpoint,
+      openedStepId,
+      setOpenedStepId,
+      blocksCoordinates,
+      updateBlockCoordinates,
+      isReadOnly,
+      focusedBlockId,
+      setFocusedBlockId,
+    }),
+    [
+      graphPosition,
+      setGraphPosition,
+      connectingIds,
+      setConnectingIds,
+      previewingEdge,
+      setPreviewingEdge,
+      sourceEndpoints,
+      targetEndpoints,
+      addSourceEndpoint,
+      addTargetEndpoint,
+      openedStepId,
+      setOpenedStepId,
+      blocksCoordinates,
+      updateBlockCoordinates,
+      isReadOnly,
+      focusedBlockId,
+    ]
+  )
+
   return (
-    <graphContext.Provider
-      value={{
-        graphPosition,
-        setGraphPosition,
-        connectingIds,
-        setConnectingIds,
-        previewingEdge,
-        setPreviewingEdge,
-        sourceEndpoints,
-        targetEndpoints,
-        addSourceEndpoint,
-        addTargetEndpoint,
-        openedStepId,
-        setOpenedStepId,
-        blocksCoordinates,
-        updateBlockCoordinates,
-        isReadOnly,
-        focusedBlockId,
-        setFocusedBlockId,
-      }}
-    >
+    <graphContext.Provider value={contextValue}>
       {children}
     </graphContext.Provider>
   )

@@ -10,7 +10,9 @@ import {
 import { Router, useRouter } from 'next/router'
 import {
   createContext,
+  Dispatch,
   ReactNode,
+  SetStateAction,
   useContext,
   useEffect,
   useMemo,
@@ -81,6 +83,8 @@ const typebotContext = createContext<
     typebot?: Typebot
     emptyFields: EmptyFields[]
     setEmptyFields: SetEmptyFields
+    hideEdges: boolean
+    setHideEdges: Dispatch<SetStateAction<boolean>>
     publishedTypebot?: PublicTypebot
     linkedTypebots?: Typebot[]
     isReadOnly?: boolean
@@ -626,11 +630,14 @@ export const TypebotContext = ({
     }
   }, [])
 
+  const [hideEdges, setHideEdges] = useState(false)
   const contextValue = useMemo(() => {
     return {
       typebot: localTypebot,
       emptyFields,
       setEmptyFields,
+      hideEdges,
+      setHideEdges,
       currentTypebot: typebot,
       publishedTypebot,
       linkedTypebots,
@@ -668,6 +675,7 @@ export const TypebotContext = ({
     localTypebot,
     emptyFields,
     setEmptyFields,
+    hideEdges,
     typebot,
     publishedTypebot,
     linkedTypebots,

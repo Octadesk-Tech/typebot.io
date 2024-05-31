@@ -305,3 +305,30 @@ export const getEndpointTopOffset = ({
 
 export const getSourceEndpointId = (edge?: Edge) =>
   edge?.from.itemId ?? edge?.from.stepId
+
+export const isItemVisible = (
+  item,
+  graphPosition,
+  containerWidth,
+  containerHeight
+) => {
+  const { x, y, scale } = graphPosition
+  const bufferX = 500
+  const bufferY = 300
+  // Transformar as coordenadas do item com base no nível de escala
+  const scaledItemX = item.graphCoordinates.x * scale + x
+  const scaledItemY = item.graphCoordinates.y * scale + y
+
+  const itemWidth = (313 + bufferX) * scale // Considerando a largura do item
+  const itemHeight = (500 + bufferY) * scale // Considerando a altura do item
+
+  // Verifique se o item ainda tem alguma parte visível na tela
+  const isHorizontallyVisible =
+    scaledItemX + itemWidth > 0 && scaledItemX < containerWidth
+
+  const isVerticallyVisible =
+    scaledItemY + itemHeight > 0 && scaledItemY < containerHeight
+
+  // O item é visível se ainda estiver parcialmente dentro da área visível
+  return isHorizontallyVisible && isVerticallyVisible
+}
