@@ -675,10 +675,7 @@ export const TypebotContext = ({
     localTypebot,
     emptyFields,
     setEmptyFields,
-<<<<<<< HEAD
     hideEdges,
-=======
->>>>>>> main
     typebot,
     publishedTypebot,
     linkedTypebots,
