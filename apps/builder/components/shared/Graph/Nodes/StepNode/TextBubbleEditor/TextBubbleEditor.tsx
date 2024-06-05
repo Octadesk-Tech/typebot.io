@@ -24,6 +24,8 @@ import { defaultTextBubbleContent, TextBubbleContent, Variable } from 'models'
 import { parseHtmlStringToPlainText } from 'services/utils'
 import { VariableSearchInput } from 'components/shared/VariableSearchInput/VariableSearchInput'
 import { ToolBar } from './ToolBar'
+import DOMPurify from 'dompurify'
+import { textBubbleEditorConfig } from 'config/dompurify'
 
 type TextBubbleEditorProps = {
   initialValue: TElement[]
@@ -150,11 +152,34 @@ export const TextBubbleEditor = ({
   }
 
   const handleChangeEditorContent = (val: TElement[]) => {
-    const plainText = val.map((node) => Node.string(node)).join(' ')
+    const clonedVal = JSON.parse(JSON.stringify(val))
+    const sanitizedVal = clonedVal.map((node) => {
+      node.children = node.children.map((child) => {
+        const escapedHtml = child.text
+          .replace(/{{/g, '&lcub;&lcub;')
+          .replace(/}}/g, '&rcub;&rcub;')
+        console.log('escapedHtml', escapedHtml)
+        const clean = DOMPurify.sanitize(escapedHtml, textBubbleEditorConfig)
+        console.log('clean', clean)
+
+        // Desescapa as variáveis após a sanitização
+        const sanitizedText = clean
+          .replace(/&lcub;&lcub;/g, '{{')
+          .replace(/&rcub;&rcub;/g, '}}')
+        console.log('sanitizedText', sanitizedText)
+
+        // const sanitizedText = DOMPurify.sanitize(child.text, config)
+        console.log('Final Object', { ...child, text: sanitizedText })
+        return { ...child, text: sanitizedText ?? '' }
+      })
+      return node
+    })
+    console.log('sanitizedVal', sanitizedVal)
+    console.log('Val', val)
+    const plainText = sanitizedVal.map((node) => Node.string(node)).join(' ')
 
     if (maxLength && plainText.length > maxLength) {
       const truncatedText = plainText.slice(0, maxLength)
-
       const newValue = [{ type: 'p', children: [{ text: truncatedText }] }]
       setValue(newValue)
       return
@@ -162,8 +187,8 @@ export const TextBubbleEditor = ({
 
     const timeout = setTimeout(() => {
       if (timeout) clearTimeout(timeout)
-      setValue(val)
-      keyUpEditor(val)
+      setValue(sanitizedVal)
+      keyUpEditor(sanitizedVal)
     }, 250)
 
     setIsVariableDropdownOpen(false)
