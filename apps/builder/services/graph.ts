@@ -313,22 +313,23 @@ export const isItemVisible = (
   containerHeight
 ) => {
   const { x, y, scale } = graphPosition
-  const bufferX = 500
-  const bufferY = 300
-  // Transformar as coordenadas do item com base no nível de escala
-  const scaledItemX = item.graphCoordinates.x * scale + x
-  const scaledItemY = item.graphCoordinates.y * scale + y
+
+  const bufferX = 100 / scale + 500
+  const bufferY = 100 / scale + 500
+
+  const scaledItemX = Math.abs(
+    item.graphCoordinates.x * scale + x - containerWidth / 2
+  )
+  const scaledItemY = Math.abs(
+    item.graphCoordinates.y * scale + y - containerHeight / 2
+  )
 
   const itemWidth = (313 + bufferX) * scale // Considerando a largura do item
   const itemHeight = (500 + bufferY) * scale // Considerando a altura do item
 
-  // Verifique se o item ainda tem alguma parte visível na tela
-  const isHorizontallyVisible =
-    scaledItemX + itemWidth > 0 && scaledItemX < containerWidth
+  const isHorizontallyVisible = scaledItemX - itemWidth < containerWidth / 2
 
-  const isVerticallyVisible =
-    scaledItemY + itemHeight > 0 && scaledItemY < containerHeight
+  const isVerticallyVisible = scaledItemY - itemHeight < containerHeight / 2
 
-  // O item é visível se ainda estiver parcialmente dentro da área visível
   return isHorizontallyVisible && isVerticallyVisible
 }
