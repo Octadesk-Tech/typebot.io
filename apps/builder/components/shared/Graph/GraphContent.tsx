@@ -32,7 +32,7 @@ const MyComponent = memo(
             item,
             graphPosition,
             graphContainerRef.current?.offsetWidth,
-            graphContainerRef.current?.offsetWidth
+            graphContainerRef.current?.offsetHeight
           )
         ),
       [typebot?.blocks, graphPosition, graphContainerRef]
