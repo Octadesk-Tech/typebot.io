@@ -14,15 +14,13 @@ import {
   TableContainer,
   Tbody,
   Td,
-  Tfoot,
   Th,
   Thead,
   Tr,
   chakra,
 } from '@chakra-ui/react'
 import { BotSpecificationOption, useWorkspace } from 'contexts/WorkspaceContext'
-import { useUser } from 'contexts/UserContext'
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState, useMemo } from 'react'
 import fileUploader from 'services/octadesk/fileUploader/fileUploader'
 import {
   ChannelSection,
@@ -50,6 +48,8 @@ export const UploadButton = ({
   ...props
 }: UploadButtonProps) => {
   const [isUploading, setIsUploading] = useState(false)
+  const match = RegExp(/\/channel\/([^/]+)/).exec(window.location.href)
+  const currentChannel: string = match ? match[1] : ''
   const {
     workspace,
     botSpecificationsChannelsInfo,
@@ -88,7 +88,7 @@ export const UploadButton = ({
 
     if (getSupportedExtensions && channel && getSupportedExtensions[channel]) {
       const extensions = getSupportedExtensions[channel]
-      
+
       if (extensions.length) {
         const andI18n = (alertFileSizeExtension as any)['e']
 
@@ -128,14 +128,17 @@ export const UploadButton = ({
     }
 
     setIsUploading(true)
-    uploader.upload(file).then((resp): any => {
-      const url = resp.data.url
-      const convertedToMb = file.size / 1000 / 1000
-      if (url) onFileUploaded(url, file.type, file.name, convertedToMb)
-      setIsUploading(false)
-    }).catch(() => {
-      setIsUploading(false)
-    })
+    uploader
+      .upload(file)
+      .then((resp): any => {
+        const url = resp.data.url
+        const convertedToMb = file.size / 1000 / 1000
+        if (url) onFileUploaded(url, file.type, file.name, convertedToMb)
+        setIsUploading(false)
+      })
+      .catch(() => {
+        setIsUploading(false)
+      })
   }
 
   const channelTranslations = {
@@ -241,9 +244,12 @@ export const UploadButton = ({
         return <BlockIcon fontSize={24} color="red" />
       case 'supportedExtensions':
         return (item as any)[channel].value?.length
-          ? 'Arquivos *.jpg, *.gif,*.png, *.ico, *.bmp'
+          ? 'Áudios, imagens e vídeos'
           : 'Áudios, imagens, vídeos e documentos'
       case 'attachmentMaxSize':
+        if (channel === 'instagram') {
+          return 'Imagens até 8mB / outros até 25mB'
+        }
         return `Até ${convertToMb((item as any)[channel].value)}mB`
       case 'exclusiveComponents':
         return (item as any)[channel].value?.length
@@ -266,6 +272,16 @@ export const UploadButton = ({
     }
   }
 
+  const accepedExtensions = useMemo(() => {
+    const options: { [key: string]: string } = {
+      [`instagram`]: '.jpg, .jpeg, .png, image/*, audio/*, video/*',
+    }
+    if (currentChannel in options) {
+      return options[currentChannel]
+    }
+    return '.jpg, .jpeg, .png, image/*, audio/*, video/*, .xlsx, .xls, image/*, .doc, .docx, .ppt, .pptx, .txt, .pdf'
+  }, [currentChannel])
+
   return (
     <>
       <Flex justify="center" direction="column">
@@ -275,7 +291,7 @@ export const UploadButton = ({
           id="file-input"
           display="none"
           onChange={handleInputChange}
-          accept=".jpg, .jpeg, .png, image/*, audio/*, video/*, .xlsx, .xls, image/*, .doc, .docx, .ppt, .pptx, .txt, .pdf"
+          accept={accepedExtensions}
         />
         <Button
           as="label"
