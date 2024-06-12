@@ -48,8 +48,6 @@ export const UploadButton = ({
   ...props
 }: UploadButtonProps) => {
   const [isUploading, setIsUploading] = useState(false)
-  const match = RegExp(/\/channel\/([^/]+)/).exec(window.location.href)
-  const currentChannel: string = match ? match[1] : ''
   const {
     workspace,
     botSpecificationsChannelsInfo,
@@ -273,14 +271,20 @@ export const UploadButton = ({
   }
 
   const accepedExtensions = useMemo(() => {
+    const allExtensions =
+      '.jpg, .jpeg, .png, image/*, audio/*, video/*, .xlsx, .xls, image/*, .doc, .docx, .ppt, .pptx, .txt, .pdf'
+
     const options: { [key: string]: string } = {
       [`instagram`]: '.jpg, .jpeg, .png, image/*, audio/*, video/*',
     }
-    if (currentChannel in options) {
-      return options[currentChannel]
+
+    if (!workspace?.channel) return allExtensions
+
+    if (workspace?.channel in options) {
+      return options[workspace?.channel]
     }
-    return '.jpg, .jpeg, .png, image/*, audio/*, video/*, .xlsx, .xls, image/*, .doc, .docx, .ppt, .pptx, .txt, .pdf'
-  }, [currentChannel])
+    return allExtensions
+  }, [workspace?.channel])
 
   return (
     <>
