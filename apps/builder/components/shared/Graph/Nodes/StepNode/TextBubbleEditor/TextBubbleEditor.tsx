@@ -158,24 +158,16 @@ export const TextBubbleEditor = ({
         const escapedHtml = child.text
           .replace(/{{/g, '&lcub;&lcub;')
           .replace(/}}/g, '&rcub;&rcub;')
-        console.log('escapedHtml', escapedHtml)
         const clean = DOMPurify.sanitize(escapedHtml, textBubbleEditorConfig)
-        console.log('clean', clean)
 
-        // Desescapa as variáveis após a sanitização
         const sanitizedText = clean
           .replace(/&lcub;&lcub;/g, '{{')
           .replace(/&rcub;&rcub;/g, '}}')
-        console.log('sanitizedText', sanitizedText)
 
-        // const sanitizedText = DOMPurify.sanitize(child.text, config)
-        console.log('Final Object', { ...child, text: sanitizedText })
         return { ...child, text: sanitizedText ?? '' }
       })
       return node
     })
-    console.log('sanitizedVal', sanitizedVal)
-    console.log('Val', val)
     const plainText = sanitizedVal.map((node) => Node.string(node)).join(' ')
 
     if (maxLength && plainText.length > maxLength) {
