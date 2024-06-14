@@ -737,6 +737,7 @@ export const TypebotContext = ({
     octaGroups,
     botFluxesList,
     tagsList,
+    wozProfiles,
   ])
   return (
     <typebotContext.Provider value={contextValue}>
