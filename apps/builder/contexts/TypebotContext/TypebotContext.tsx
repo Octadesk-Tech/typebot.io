@@ -55,6 +55,7 @@ import useEmptyFields, {
   EmptyFields,
 } from 'services/utils/useEmptyFields'
 import { WOZService } from 'services/octadesk/woz/woz.service'
+import useWozProfiles from 'hooks/WozProfiles/useWozProfiles'
 
 type UpdateTypebotPayload = Partial<{
   theme: Theme
@@ -628,35 +629,7 @@ export const TypebotContext = ({
     }
   }, [])
 
-  const [wozProfiles, setWOZProfiles] = useState<Array<any>>([])
-  useEffect(() => {
-    const fetchWOZProfiles = async (): Promise<void> => {
-      const wozProfilesList: Array<any> = []
-      Promise.all([
-        WOZService()
-          .getAll()
-          .then((res) => {
-            res.sort((a: any, b: any) => a.name.localeCompare(b.name))
-            const itemList = res
-              .map((profile: any, idx: number) => ({
-                ...profile,
-                label: profile.name,
-                value: { profile: profile.id },
-                key: `wp-${idx}`
-              }))
-
-            wozProfilesList.push(...itemList)
-          }),
-      ])
-
-      setWOZProfiles(wozProfilesList)
-    }
-    fetchWOZProfiles()
-
-    return () => {
-      setWOZProfiles(() => [])
-    }
-  }, [])
+  const { wozProfiles } = useWozProfiles()
 
   const contextValue = useMemo(() => {
     return {
