@@ -14,7 +14,6 @@ export const WozAssignSelect = ({ onSelect, selectedProfile }: Props) => {
   const [defaultSelected, setDefaultSelected] = useState<OptionType>()
 
   const handleOnChange = (selected: any): void => {
-    console.log(selected)
     onSelect(selected)
   }
 
