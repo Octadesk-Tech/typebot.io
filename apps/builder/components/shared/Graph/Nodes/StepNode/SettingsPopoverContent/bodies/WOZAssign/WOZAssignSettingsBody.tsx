@@ -42,7 +42,6 @@ export const WOZAssignSettingBody = ({ options, onOptionsChange }: Props) => {
   }
 
   const handleWozAssignSelect = (e: any) => {
-    console.log('handleWozAssignSelect', e)
     onOptionsChange({
       ...options,
       virtualAgentId: e.profile
