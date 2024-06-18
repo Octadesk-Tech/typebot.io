@@ -29,7 +29,7 @@ const useCustomVariables = () => {
       default: v.default,
       idCompany: v.idCompany,
       isEnabled: v.isEnabled,
-      name: v.name === 'Cliente' ? 'Client' : v.name,
+      name: v.name,
     }))
   }, [data])
 
