@@ -55,7 +55,9 @@ import { TagsService } from 'services/octadesk/tags/tags.service'
 import useEmptyFields, {
   ActionsTypeEmptyFields,
   EmptyFields,
-} from 'services/utils/useEmptyFields'
+} from 'hooks/EmptyFields/useEmptyFields'
+import useCustomVariables from 'hooks/CustomVariables/useCustomVariables'
+import { ICustomVariable } from 'hooks/CustomVariables/interface'
 
 type UpdateTypebotPayload = Partial<{
   theme: Theme
@@ -82,6 +84,7 @@ const typebotContext = createContext<
   {
     typebot?: Typebot
     emptyFields: EmptyFields[]
+    customVariables: ICustomVariable[]
     setEmptyFields: SetEmptyFields
     hideEdges: boolean
     setHideEdges: Dispatch<SetStateAction<boolean>>
@@ -631,9 +634,12 @@ export const TypebotContext = ({
   }, [])
 
   const [hideEdges, setHideEdges] = useState(false)
+  const { customVariables } = useCustomVariables()
+
   const contextValue = useMemo(() => {
     return {
       typebot: localTypebot,
+      customVariables: customVariables,
       emptyFields,
       setEmptyFields,
       hideEdges,
@@ -673,6 +679,7 @@ export const TypebotContext = ({
     }
   }, [
     localTypebot,
+    customVariables,
     emptyFields,
     setEmptyFields,
     hideEdges,
