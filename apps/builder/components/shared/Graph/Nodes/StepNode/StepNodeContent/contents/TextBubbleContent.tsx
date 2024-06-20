@@ -4,7 +4,7 @@ import { EndConversationStep, TextBubbleStep } from 'models'
 import React from 'react'
 import { parseVariableHighlight } from 'services/utils'
 import DOMPurify from 'dompurify'
-import { textBubbleEditorConfig } from 'config/dompurify'
+import { textBubbleEditorContentConfig } from 'config/dompurify'
 
 type Props = {
   step: TextBubbleStep | EndConversationStep
@@ -14,8 +14,9 @@ export const TextBubbleContent = ({ step }: Props) => {
   const { typebot } = useTypebot()
   const sanitizedHtml = DOMPurify.sanitize(
     step.content.html,
-    textBubbleEditorConfig
+    textBubbleEditorContentConfig
   )
+
   if (!typebot) return <></>
   return (
     <Flex
