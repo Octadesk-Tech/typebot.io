@@ -10,6 +10,21 @@ export const textBubbleEditorConfig = {
     'script',
     'svg',
     'img',
+  ],
+}
+
+export const textBubbleEditorContentConfig = {
+  FORBID_TAGS: [
+    'input',
+    'textarea',
+    'form',
+    'button',
+    'select',
+    'option',
+    'marquee',
+    'script',
+    'svg',
+    'img',
     'a',
   ],
 }
