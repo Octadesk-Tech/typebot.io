@@ -155,16 +155,26 @@ export const TextBubbleEditor = ({
     const clonedVal = JSON.parse(JSON.stringify(val))
     const sanitizedVal = clonedVal.map((node) => {
       node.children = node.children.map((child) => {
-        const escapedHtml = child.text
-          .replace(/{{/g, '&lcub;&lcub;')
-          .replace(/}}/g, '&rcub;&rcub;')
-        const clean = DOMPurify.sanitize(escapedHtml, textBubbleEditorConfig)
+        if (child?.text?.includes('{{') && child?.text?.includes('}}')) {
+          const escapedHtml = child.text
+            ?.replace(/{{/g, '&lcub;&lcub;')
+            ?.replace(/}}/g, '&rcub;&rcub;')
 
-        const sanitizedText = clean
-          .replace(/&lcub;&lcub;/g, '{{')
-          .replace(/&rcub;&rcub;/g, '}}')
+          const clean = DOMPurify.sanitize(escapedHtml, textBubbleEditorConfig)
 
-        return { ...child, text: sanitizedText ?? '' }
+          const sanitizedText = clean
+            ?.replace(/&lcub;&lcub;/g, '{{')
+            ?.replace(/&rcub;&rcub;/g, '}}')
+
+          return { ...child, text: sanitizedText ?? '' }
+        }
+
+        if (child?.text) {
+          const clean = DOMPurify.sanitize(child.text, textBubbleEditorConfig)
+          return { ...child, text: clean ?? '' }
+        }
+
+        return { ...child }
       })
       return node
     })
