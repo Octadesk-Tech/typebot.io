@@ -20,8 +20,9 @@ const MyComponent = memo(
       useState(false)
 
     useEffect(() => {
-      setTimeout(() => {
+      const interval = setTimeout(() => {
         setIsVirtualizationEnabled(true)
+        return () => clearTimeout(interval)
       }, 1000)
     }, [])
 

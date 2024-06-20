@@ -58,8 +58,11 @@ import useEmptyFields, {
 } from 'hooks/EmptyFields/useEmptyFields'
 import useCustomVariables from 'hooks/CustomVariables/useCustomVariables'
 import { ICustomVariable } from 'hooks/CustomVariables/interface'
+<<<<<<< HEAD
 import { WOZService } from 'services/octadesk/woz/woz.service'
 import useWozProfiles from 'hooks/WozProfiles/useWozProfiles'
+=======
+>>>>>>> feat/increase-performance
 
 type UpdateTypebotPayload = Partial<{
   theme: Theme
@@ -638,8 +641,8 @@ export const TypebotContext = ({
 
   const { wozProfiles } = useWozProfiles()
 
-  const { customVariables } = useCustomVariables()
   const [hideEdges, setHideEdges] = useState(false)
+  const { customVariables } = useCustomVariables()
 
   const contextValue = useMemo(() => {
     return {
