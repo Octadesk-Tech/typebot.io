@@ -71,6 +71,7 @@ export const Graph = memo(
       updateBlockCoordinates,
       setPreviewingEdge,
       connectingIds,
+      goToBegining,
     } = useGraph()
 
     const [graphPosition, setGraphPosition] = useState(
@@ -87,6 +88,12 @@ export const Graph = memo(
       'top' | 'right' | 'bottom' | 'left' | undefined
     >()
     useAutoMoveBoard(autoMoveDirection, setGraphPosition)
+
+    useEffect(() => {
+      window.addEventListener('message', handleEventListeners)
+
+      return () => window.removeEventListener('message', handleEventListeners)
+    }, [typebot, graphPosition])
 
     useEffect(() => {
       if (JSON.stringify(globalGraphPosition) === JSON.stringify(graphPosition))
@@ -113,6 +120,13 @@ export const Graph = memo(
       })
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedGraphPosition])
+
+    const handleEventListeners = (e: any): void => {
+      const event = e.data || e.data.name || ''
+      if (event === 'backClick') {
+        goToBegining()
+      }
+    }
 
     const handleMouseWheel = (e: WheelEvent) => {
       e.preventDefault()

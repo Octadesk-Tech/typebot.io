@@ -10,6 +10,7 @@ import {
   useMemo,
   useState,
 } from 'react'
+import { useTypebot } from './TypebotContext'
 
 export const stubLength = 20
 export const blockWidth = 300
@@ -62,6 +63,7 @@ const graphContext = createContext<{
   blocksCoordinates: BlocksCoordinates
   updateBlockCoordinates: (blockId: string, newCoord: Coordinates) => void
   graphPosition: Position
+  goToBegining: () => void
   setGraphPosition: Dispatch<SetStateAction<Position>>
   connectingIds: ConnectingIds | null
   setConnectingIds: Dispatch<SetStateAction<ConnectingIds | null>>
@@ -102,6 +104,7 @@ export const GraphProvider = ({
     {}
   )
   const [focusedBlockId, setFocusedBlockId] = useState<string>()
+  const { typebot } = useTypebot()
 
   useEffect(() => {
     setBlocksCoordinates(
@@ -136,10 +139,36 @@ export const GraphProvider = ({
       [blockId]: newCoord,
     }))
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const goToBegining = () => {
+    const stepStart = typebot?.blocks.find((block) =>
+      block.steps.find((step) => step.type === 'start')
+    )
+    if (stepStart === undefined) return
+    const graphCoordinates = stepStart.graphCoordinates
+    const centerX = window.innerWidth / 2
+    const centerY = window.innerHeight / 2
+    const averageSizeCard = 315
+
+    let calcX = centerX - averageSizeCard / 2 - graphCoordinates.x
+    let calcY = centerY - averageSizeCard / 2 - graphCoordinates.y
+
+    if (graphPosition.x === calcX && graphPosition.y === calcY) {
+      calcX = calcX + 1
+      calcY = calcY + 1
+    }
+
+    const timer = setTimeout(() => {
+      setGraphPosition({ x: calcX, y: calcY, scale: 1 })
+      clearTimeout(timer)
+    }, 300)
+  }
+
   const contextValue = useMemo(
     () => ({
       graphPosition,
       setGraphPosition,
+      goToBegining,
       connectingIds,
       setConnectingIds,
       previewingEdge,
@@ -159,6 +188,7 @@ export const GraphProvider = ({
     [
       graphPosition,
       setGraphPosition,
+      goToBegining,
       connectingIds,
       setConnectingIds,
       previewingEdge,
@@ -173,6 +203,7 @@ export const GraphProvider = ({
       updateBlockCoordinates,
       isReadOnly,
       focusedBlockId,
+      setFocusedBlockId,
     ]
   )
 
