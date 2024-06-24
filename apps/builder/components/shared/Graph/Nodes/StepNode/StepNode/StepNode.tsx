@@ -53,7 +53,7 @@ import {
   ValidationMessage,
   getValidationMessages,
 } from '../../helpers/helpers'
-import { ActionsTypeEmptyFields } from 'services/utils/useEmptyFields'
+import { ActionsTypeEmptyFields } from 'hooks/EmptyFields/useEmptyFields'
 import { colors } from 'libs/theme'
 
 type StepNodeContextProps = {
@@ -215,6 +215,7 @@ export const StepNode = ({
       initialValue={step.content.richText}
       onClose={handleCloseEditor}
       onKeyUp={handleKeyUp}
+      menuPosition="absolute"
     />
   ) : (
     <StepNodeContext.Provider value={{ setIsPopoverOpened }}>

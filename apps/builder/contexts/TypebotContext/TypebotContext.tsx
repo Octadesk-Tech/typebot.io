@@ -53,7 +53,9 @@ import { TagsService } from 'services/octadesk/tags/tags.service'
 import useEmptyFields, {
   ActionsTypeEmptyFields,
   EmptyFields,
-} from 'services/utils/useEmptyFields'
+} from 'hooks/EmptyFields/useEmptyFields'
+import useCustomVariables from 'hooks/CustomVariables/useCustomVariables'
+import { ICustomVariable } from 'hooks/CustomVariables/interface'
 import { WOZService } from 'services/octadesk/woz/woz.service'
 import useWozProfiles from 'hooks/WozProfiles/useWozProfiles'
 
@@ -82,6 +84,7 @@ const typebotContext = createContext<
   {
     typebot?: Typebot
     emptyFields: EmptyFields[]
+    customVariables: ICustomVariable[]
     setEmptyFields: SetEmptyFields
     publishedTypebot?: PublicTypebot
     linkedTypebots?: Typebot[]
@@ -629,11 +632,14 @@ export const TypebotContext = ({
     }
   }, [])
 
+  const { customVariables } = useCustomVariables()
+
   const { wozProfiles } = useWozProfiles()
 
   const contextValue = useMemo(() => {
     return {
       typebot: localTypebot,
+      customVariables: customVariables,
       emptyFields,
       setEmptyFields,
       currentTypebot: typebot,
@@ -672,6 +678,7 @@ export const TypebotContext = ({
     }
   }, [
     localTypebot,
+    customVariables,
     emptyFields,
     setEmptyFields,
     typebot,
