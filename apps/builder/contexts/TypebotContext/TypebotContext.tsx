@@ -58,6 +58,7 @@ import useEmptyFields, {
 } from 'hooks/EmptyFields/useEmptyFields'
 import useCustomVariables from 'hooks/CustomVariables/useCustomVariables'
 import { ICustomVariable } from 'hooks/CustomVariables/interface'
+import { WOZService } from 'services/octadesk/woz/woz.service'
 import useWozProfiles from 'hooks/WozProfiles/useWozProfiles'
 
 type UpdateTypebotPayload = Partial<{
@@ -639,6 +640,8 @@ export const TypebotContext = ({
 
   const [hideEdges, setHideEdges] = useState(false)
   const { customVariables } = useCustomVariables()
+
+  const { wozProfiles } = useWozProfiles()
 
   const contextValue = useMemo(() => {
     return {

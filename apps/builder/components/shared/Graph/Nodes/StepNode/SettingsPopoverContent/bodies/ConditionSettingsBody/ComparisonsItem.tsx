@@ -27,7 +27,11 @@ export const ComparisonItem = ({
   const handleSelectVariable = (variable?: Variable) => {
     if (variable?.id === item.variableId) return
     myVariable = variable
-    onItemChange({ ...item, variableId: variable?.id, value: '' })
+    onItemChange({
+      ...item,
+      variableId: variable?.id || variable?.token,
+      value: '',
+    })
   }
 
   const handleSelectComparisonOperator = (
