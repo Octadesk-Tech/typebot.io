@@ -636,8 +636,6 @@ export const TypebotContext = ({
     }
   }, [])
 
-  const { wozProfiles } = useWozProfiles()
-
   const [hideEdges, setHideEdges] = useState(false)
   const { customVariables } = useCustomVariables()
 
