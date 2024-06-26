@@ -614,11 +614,11 @@ export const WorkspaceContext = ({ children }: { children: ReactNode }) => {
     }
   }, [
     loaded,
-    setVariables,
     typebot?.variables,
     octaPersonItems,
     octaChatItems,
     octaOrganizationItems,
+    verifyFeatureToggle,
   ])
 
   useEffect(() => {
