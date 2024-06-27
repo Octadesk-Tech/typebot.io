@@ -195,18 +195,13 @@ const workspaceContext = createContext<IWorkspaceContextData>(
 
 export const WorkspaceContext = ({ children }: { children: ReactNode }) => {
   const { query } = useRouter()
-
+  const { verifyFeatureToggle } = useUser()
   const { user } = useUser()
-
   const userId = user?.id
-
   const { typebot, setVariables } = useTypebot()
-
   const { workspaces, isLoading, mutate } = useWorkspaces({ userId })
-
   const [currentWorkspace, setCurrentWorkspace] =
     useState<WorkspaceWithMembers>()
-
   const canEdit =
     workspaces
       ?.find(byId(currentWorkspace?.id))
@@ -221,10 +216,10 @@ export const WorkspaceContext = ({ children }: { children: ReactNode }) => {
     const defaultWorkspace = lastWorspaceId
       ? workspaces.find(byId(lastWorspaceId))
       : workspaces.find((w) =>
-        w.members.some(
-          (m) => m.userId === userId && m.role === WorkspaceRole.ADMIN
+          w.members.some(
+            (m) => m.userId === userId && m.role === WorkspaceRole.ADMIN
+          )
         )
-      )
 
     setCurrentWorkspace(defaultWorkspace ?? workspaces[0])
   }, [workspaces])
@@ -420,8 +415,8 @@ export const WorkspaceContext = ({ children }: { children: ReactNode }) => {
     const customProperties = properties.map(
       (h: {
         id: string
-        fieldType: number,
-        type: number,
+        fieldType: number
+        type: number
         fieldId: string
         fixed: boolean
       }) => {
@@ -481,7 +476,11 @@ export const WorkspaceContext = ({ children }: { children: ReactNode }) => {
   const createChatField = useCallback(
     (property: OctaProperty, variableId?: string): any => {
       if (octaChatFields.find((c) => c.token === property.token)) return
-      if (property.token.endsWith('-contato') || property.token.endsWith('-organizacao')) return
+      if (
+        property.token.endsWith('-contato') ||
+        property.token.endsWith('-organizacao')
+      )
+        return
 
       const field = {
         type: property.type,
@@ -575,10 +574,52 @@ export const WorkspaceContext = ({ children }: { children: ReactNode }) => {
         ...octaOrganizationItems,
       ]
 
-      if ((typebot?.variables?.length || 0) >= variables?.length) return
-      setVariables(variables)
+      const mergeArraysUniqueByToken = (array1: any[], array2: any[]) => {
+        const mergedArray = [...array1, ...array2]
+        const uniqueItems: any = {}
+
+        mergedArray.forEach((item) => {
+          uniqueItems[item.token] = item
+        })
+        return Object.values(uniqueItems)
+      }
+
+      let mergedItems = mergeArraysUniqueByToken(
+        typebot?.variables || [],
+        variables
+      )
+
+      const isResponsibleContactEnabled = verifyFeatureToggle(
+        'responsible-contact-enabled'
+      )
+
+      if (isResponsibleContactEnabled) {
+        if (!mergedItems.some((mi) => mi.token === '#responsavel-contato')) {
+          mergedItems.push({
+            token: '#responsavel-contato',
+            example: 'Agente responsável',
+            domain: 'PERSON',
+            type: 'responsavel-contato',
+            name: 'responsavel-contato',
+          })
+        }
+      } else {
+        mergedItems = mergedItems.filter(
+          (item) => item.token !== '#responsavel-contato'
+        )
+      }
+
+      if (mergedItems.length === typebot?.variables.length) return
+      setVariables(mergedItems)
     }
-  }, [loaded, octaPersonItems, octaChatItems, octaOrganizationItems])
+  }, [
+    loaded,
+    typebot?.variables,
+    octaPersonItems,
+    octaChatItems,
+    octaOrganizationItems,
+    verifyFeatureToggle,
+  ])
 
   useEffect(() => {
     if (octaPersonFields) {
@@ -589,12 +630,12 @@ export const WorkspaceContext = ({ children }: { children: ReactNode }) => {
 
       if (octaPersonProperties) {
         const itemsToAdd = octaPersonProperties.items.filter(
-          (o: { token: string }) => fixedPersonPropertiesWithId.findIndex((p) => p.token === o.token) === -1
+          (o: { token: string }) =>
+            fixedPersonPropertiesWithId.findIndex(
+              (p) => p.token === o.token
+            ) === -1
         )
-        setOctaPersonItems([
-          ...fixedPersonPropertiesWithId,
-          ...itemsToAdd,
-        ])
+        setOctaPersonItems([...fixedPersonPropertiesWithId, ...itemsToAdd])
       }
     }
   }, [octaPersonFields])
@@ -608,12 +649,11 @@ export const WorkspaceContext = ({ children }: { children: ReactNode }) => {
 
       if (octaChatProperties) {
         const itemsToAdd = octaChatProperties.items.filter(
-          (o: { token: string }) => fixedChatPropertiesWithId.findIndex((p) => p.token === o.token) === -1
+          (o: { token: string }) =>
+            fixedChatPropertiesWithId.findIndex((p) => p.token === o.token) ===
+            -1
         )
-        setOctaChatItems([
-          ...fixedChatPropertiesWithId,
-          ...itemsToAdd,
-        ])
+        setOctaChatItems([...fixedChatPropertiesWithId, ...itemsToAdd])
       }
     }
   }, [octaChatFields])
@@ -627,7 +667,10 @@ export const WorkspaceContext = ({ children }: { children: ReactNode }) => {
 
       if (octaOrganizationProperties) {
         const itemsToAdd = octaOrganizationProperties.items.filter(
-          (o: { token: string }) => fixedOrganizationPropertiesWithId.findIndex((p) => p.token === o.token) === -1
+          (o: { token: string }) =>
+            fixedOrganizationPropertiesWithId.findIndex(
+              (p) => p.token === o.token
+            ) === -1
         )
         setOctaOrganizationItems([
           ...fixedOrganizationPropertiesWithId,

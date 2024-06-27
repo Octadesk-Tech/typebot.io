@@ -34,6 +34,7 @@ type TextBubbleEditorProps = {
   increment?: number
   maxLength?: number
   required?: boolean | { errorMsg?: string }
+  menuPosition?: 'absolute' | 'fixed'
 }
 
 export const TextBubbleEditor = ({
@@ -43,6 +44,7 @@ export const TextBubbleEditor = ({
   increment,
   maxLength,
   required,
+  menuPosition = 'fixed',
 }: TextBubbleEditorProps) => {
   const [value, setValue] = useState(initialValue)
   const [focus, setFocus] = useState(false)
@@ -287,6 +289,7 @@ export const TextBubbleEditor = ({
               handleOutsideClick={() => setIsVariableDropdownOpen(false)}
               isSaveContext={false}
               labelDefault={'Selecione uma variável:'}
+              menuPosition={menuPosition}
             />
           </Flex>
         )}
