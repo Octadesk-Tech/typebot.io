@@ -596,12 +596,15 @@ export const WorkspaceContext = ({ children }: { children: ReactNode }) => {
 
       if (isResponsibleContactEnabled) {
         if (!mergedItems.some((mi) => mi.token === '#responsavel-contato')) {
+          const variableId = uuid();
           mergedItems.push({
             token: '#responsavel-contato',
             example: 'Agente responsável',
             domain: 'PERSON',
             type: 'responsavel-contato',
             name: 'responsavel-contato',
+            id: variableId,
+            variableId,
           })
         }
 
