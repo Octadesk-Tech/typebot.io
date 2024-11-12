@@ -12,6 +12,7 @@ import { useTypebot } from 'contexts/TypebotContext'
 import { PlusIcon, TrashIcon } from 'assets/icons'
 import { Item, ItemIndices, ItemType } from 'models'
 import { isNotDefined } from 'utils'
+import { stripEmoji } from 'util/string'
 
 type Props = {
   item: Item
@@ -28,6 +29,7 @@ export const WhatsAppButtonsNodeContent = ({
   const [initialContent] = useState(item.content ?? '')
   const [itemValue, setItemValue] = useState(item.content ?? 'Editar botão')
   const editableRef = useRef<HTMLDivElement | null>(null)
+  const MAX_BUTTON_LIMIT = 3
 
   useEffect(() => {
     if (itemValue !== item.content) setItemValue(item.content ?? 'Editar botão')
@@ -44,20 +46,28 @@ export const WhatsAppButtonsNodeContent = ({
   const hasMoreThanOneItem = () => indices.itemsCount && indices.itemsCount > 1
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Escape' && itemValue === 'Editar botão' && hasMoreThanOneItem()) deleteItem(indices)
+    if (
+      e.key === 'Escape' &&
+      itemValue === 'Editar botão' &&
+      hasMoreThanOneItem()
+    )
+      deleteItem(indices)
     if (e.key === 'Enter' && itemValue !== '' && initialContent === '')
       handlePlusClick()
   }
 
   const handlePlusClick = () => {
-    const itemIndex = indices.itemIndex + 1
-    createItem(
-      {
-        stepId: item.stepId,
-        type: ItemType.WHATSAPP_BUTTONS_LIST as ItemType.BUTTON,
-      },
-      { ...indices, itemIndex }
-    )
+    const itemCount = indices.itemsCount ?? 0
+    if (itemCount < MAX_BUTTON_LIMIT) {
+      const itemIndex = indices.itemIndex + 1
+      createItem(
+        {
+          stepId: item.stepId,
+          type: ItemType.WHATSAPP_BUTTONS_LIST as ItemType.BUTTON,
+        },
+        { ...indices, itemIndex }
+      )
+    }
   }
 
   const handleDeleteClick = () => {
@@ -71,13 +81,17 @@ export const WhatsAppButtonsNodeContent = ({
     }
   }
 
+  const handleSetItemValue = (value: string) => {
+    setItemValue(stripEmoji(value) as string)
+  }
+
   return (
     <Flex justify="center" w="100%" pos="relative">
       <Editable
         ref={editableRef}
         startWithEditView={isNotDefined(item.content)}
         value={itemValue}
-        onChange={setItemValue}
+        onChange={handleSetItemValue}
         onSubmit={handleInputSubmit}
         onKeyDownCapture={handleKeyPress}
         isPreviewFocusable={true}
@@ -111,6 +125,7 @@ export const WhatsAppButtonsNodeContent = ({
           shadow="md"
           colorScheme="gray"
           onClick={handlePlusClick}
+          isDisabled={(indices.itemsCount ?? 0) >= MAX_BUTTON_LIMIT}
         />
         {hasMoreThanOneItem() && (
           <IconButton
@@ -120,7 +135,8 @@ export const WhatsAppButtonsNodeContent = ({
             shadow="md"
             colorScheme="gray"
             onClick={handleDeleteClick}
-          />)}
+          />
+        )}
       </Fade>
     </Flex>
   )
