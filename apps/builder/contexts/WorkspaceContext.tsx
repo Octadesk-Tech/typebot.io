@@ -607,6 +607,15 @@ export const WorkspaceContext = ({ children }: { children: ReactNode }) => {
             variableId,
           })
         }
+
+        mergedItems = mergedItems.map((item) => {
+          if (item.token === '#responsavel-contato') {
+            const itemId = uuid()
+            item.id = itemId
+            item.variableId = itemId
+          }
+          return item
+        })
       } else {
         mergedItems = mergedItems.filter(
           (item) => item.token !== '#responsavel-contato'
