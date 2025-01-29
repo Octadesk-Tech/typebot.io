@@ -29,7 +29,6 @@ export const ExternalEvent = React.memo(function ExternalEvent({
   const [timeout, setTimeoutValue] = useState<string>(
     () => step?.options?.timeout ?? "5"
   );
-
   const [url, setUrl] = useState<string>("")
   const { typebot } = useTypebot()
   const {
@@ -94,7 +93,11 @@ export const ExternalEvent = React.memo(function ExternalEvent({
     if (!typebot?.id) return;
 
     const url = await mountUrl({ blockId: step.id, botId: typebot.id });
-    step.options.url = url;
+
+    onOptionsChange({
+      ...step.options,
+      url: url
+    })
 
     setUrl(url)
   }, [])
@@ -106,7 +109,10 @@ export const ExternalEvent = React.memo(function ExternalEvent({
       setInvalidData(false);
       setResponseKeys(getDeepKeys(json))
 
-      step.options.body = JSON.stringify(json, undefined, 2);
+      onOptionsChange({
+        ...step.options,
+        body: JSON.stringify(json, undefined, 2)
+      })
 
       return true;
     } catch (err: any) {
@@ -118,7 +124,10 @@ export const ExternalEvent = React.memo(function ExternalEvent({
   const onSelect = (e: any) => {
     const value = e.target.value;
     setTimeoutValue(value);
-    step.options.timeout = value;
+    onOptionsChange({
+      ...step.options,
+      timeout: value
+    })
   }
 
   const fallbackMessageComponent = (
@@ -194,7 +203,10 @@ export const ExternalEvent = React.memo(function ExternalEvent({
 
     setResponseKeys(getDeepKeys(json))
 
-    step.options.body = JSON.stringify(json, undefined, 2);
+    onOptionsChange({
+      ...step.options,
+      body: JSON.stringify(json, undefined, 2)
+    })
 
     disconnectSocket(disconnectSocketParams);
     clearSocketTimeout()
